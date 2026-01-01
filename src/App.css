@@ -1,0 +1,38 @@
+
+.App {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+/* UI (Arayüz) elemanlarını 3D sahnesinin üzerine bindir */
+.ui-overlay {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10; /* Canvas'ın üzerinde kalmasını sağlar */
+  color: white;
+  pointer-events: none; /* Altındaki 3D sahneye tıklanabilmesini sağlar */
+  font-family: sans-serif;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+
+
+
+.card {
+          transition: transform 0.2s ease, margin-top 0.2s ease;
+          cursor: pointer;
+        }
+        .card:hover {
+          transform: translateY(-50px) scale(1.1);
+          z-index: 200;
+          box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+          border-color: gold !important;
+        }
+
+        @keyframes holo-shine {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
