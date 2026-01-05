@@ -1,16 +1,13 @@
-import React, { useMemo, useState, useRef } from 'react'
+import React, { useMemo, useState, useRef, useEffect, Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import gsap from 'gsap'
 import { useTexture } from '@react-three/drei'
-import { color } from 'three/tsl'
-import { Sky, OrbitControls } from '@react-three/drei'
+import { Sky, OrbitControls, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 
-import { motion, AnimatePresence } from 'framer-motion' // Animasyonlar için önerilir
+import { useAppContext } from '../../contexts/AppContext';
+import { CoinPouch } from '../model/coinpouch';
 
-
-import { MeshPhysicalMaterial } from 'three'
-import { Environment, MeshDistortMaterial, ContactShadows } from '@react-three/drei'
 
 // Altıgen Bileşeni (Görsel Harita)
 function HexagonTexture({ position, texturePath, height }) {
@@ -36,28 +33,38 @@ function HexagonTexture({ position, texturePath, height }) {
   )
 }
 
-function Hexagon({ position, color, height, emissiveIntensity }) {
+function Hexagon({ position, color, height, emissiveIntensity, type }) {
   let metalness = 1;
   let roughness = 0.05;
   let envMapIntensity = 2;
+
+  const { nodes, materials } = useGLTF("/assets/3d/coin-3098.glb")
+
+
   return (
-    <group position={position}>
-      <mesh rotation={[Math.PI, 0, 0]}>
-        <cylinderGeometry args={[1, 1, height, 6]} />
+    <>
+      {type === 'gold' &&
+        <CoinPouch position={[position[0],position[1]+1,position[2]]} scale={0.2} speed={2} />
+      }
+      <group position={position}>
+
+        <mesh rotation={[Math.PI, 0, 0]}>
+          <cylinderGeometry args={[1, 1, height, 6]} />
+          <meshStandardMaterial attach="material-0" color={color} height={height} emissiveIntensity={emissiveIntensity} roughness={roughness} envMapIntensity={envMapIntensity} />
+          <meshStandardMaterial attach="material-1" color={color} height={height} emissiveIntensity={emissiveIntensity} roughness={roughness} envMapIntensity={envMapIntensity} />
+          <meshStandardMaterial attach="material-2" color={color} height={height} emissiveIntensity={emissiveIntensity} roughness={roughness} envMapIntensity={envMapIntensity} />
+        </mesh>
+
+
+        <lineSegments rotation={[Math.PI, 0, 0]}>
+          <edgesGeometry args={[new THREE.CylinderGeometry(1, 1, height, 6), 1]} />
+          <lineBasicMaterial color="#251e2d" linewidth={2} />
+        </lineSegments>
+      </group>
+    </>
 
 
 
-        <meshStandardMaterial attach="material-0" color={color} height={height}  emissiveIntensity={emissiveIntensity} roughness={roughness} envMapIntensity={envMapIntensity}/>
-        <meshStandardMaterial attach="material-1" color={color} height={height}  emissiveIntensity={emissiveIntensity}  roughness={roughness} envMapIntensity={envMapIntensity}/>
-        <meshStandardMaterial attach="material-2" color={color} height={height}  emissiveIntensity={emissiveIntensity}  roughness={roughness} envMapIntensity={envMapIntensity}/>
-
-
-      </mesh>
-      <lineSegments rotation={[Math.PI, 0, 0]}>
-        <edgesGeometry args={[new THREE.CylinderGeometry(1, 1, height, 6), 1]} />
-        <lineBasicMaterial color="#251e2d" linewidth={2} />
-      </lineSegments>
-    </group>
   )
 }
 
@@ -71,7 +78,20 @@ function Unit({ unitRef }) {
   )
 }
 
-export default function Game() {
+export default function HexMap() {
+
+  const { data, trigger } = useAppContext();
+
+  const myFunction = () => {
+    console.log('Component2 fonksiyonu çalıştı!');
+    // moveUnit();
+  };
+  useEffect(() => {
+
+    myFunction();
+
+  }, [trigger]);
+
   const unitRef = useRef()
   const [mapData, setMapData] = useState([])
 
@@ -125,7 +145,8 @@ export default function Game() {
           height: height,
           color: cc,
           emissive: cc, // Parıltı efekti için
-          emissiveIntensity: 0.2
+          emissiveIntensity: 0.2,
+          type: cc === 'gold' ? 'gold' : 'normal'
         });
 
 
@@ -311,7 +332,7 @@ export default function Game() {
 
 
 
-      <Canvas camera={{ position: [10, 10, 40], fov: 60, near: 10, far: 1000 }}>
+      <Canvas camera={{ position: [10, 10, 40], fov: 60,  far: 1000 }}>
         <color attach="background" args={['#a2d2ff']} />
         {/* <fog attach="fog" args={['#f0f0f0', 10, 50]} /> */}
         <ambientLight intensity={1} />
@@ -323,8 +344,10 @@ export default function Game() {
 
         {/* Haritayı Çiz */}
         {cells.map((cell) => (
-          <Hexagon key={cell.id} position={cell.position} texturePath={cell.tex} height={cell.height} color={cell.color} emissive={cell.color} emissiveIntensity={cell.emissiveIntensity} />
+          <Hexagon type={cell.type} key={cell.id} position={cell.position} texturePath={cell.tex} height={cell.height} color={cell.color} emissive={cell.color} emissiveIntensity={cell.emissiveIntensity} />
         ))}
+
+
 
 
 
@@ -335,7 +358,7 @@ export default function Game() {
         <OrbitControls
           onChange={(e) => {
             const { x, y, z } = e.target.object.position;
-            console.log(`Kamera Pozisyonu: x: ${x.toFixed(2)}, y: ${y.toFixed(2)}, z: ${z.toFixed(2)}`);
+            //console.log(`Kamera Pozisyonu: x: ${x.toFixed(2)}, y: ${y.toFixed(2)}, z: ${z.toFixed(2)}`);
           }}
         />
       </Canvas>

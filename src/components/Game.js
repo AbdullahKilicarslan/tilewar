@@ -1,17 +1,20 @@
 import { createContext, useContext, useState } from 'react';
-import HexMap from './components/Sub/HexMap'; // HexMap.js dosyasının aynı klasörde olduğunu varsayıyoruz
-import PeerJSChat from './components/Sub/PeerJSChat'; // HexMap.js dosyasının aynı klasörde olduğunu varsayıyoruz
+import HexMap from './Sub/HexMap'; // HexMap.js dosyasının aynı klasörde olduğunu varsayıyoruz
+import PeerJSChat from './Sub/PeerJSChat'; // HexMap.js dosyasının aynı klasörde olduğunu varsayıyoruz
 
 
-const AppContext = createContext();
+import {  useAppContext } from '../contexts/AppContext';
 
-function Game() {
-  const [trigger, setTrigger] = useState(0);
+
+export default function Game() {
+  const { gameScreen } = useAppContext();
 
   return (
-    <AppContext.Provider value={{ trigger, setTrigger }}>
+    <>
       <PeerJSChat />
-      <HexMap />
-    </AppContext.Provider>
+      {gameScreen ?
+        <HexMap />
+        : <></>}
+    </>
   );
 }
