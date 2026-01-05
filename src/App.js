@@ -3,13 +3,19 @@ import Game from './components/Game'; // HexMap.js dosyasının aynı klasörde 
 
 import './App.css';
 import { AppProvider } from './contexts/AppContext';
+import { MainMenuProvider } from './contexts/MainMenuContext';
+import { HubProvider } from './contexts/HubContext';
 
 function App() {
   return (
 
     <div className="App">
       <AppProvider>
-        <Game />
+        <HubProvider>
+          <MainMenuProvider>
+            <Game />
+          </MainMenuProvider>
+        </HubProvider>
       </AppProvider>
     </div>
   );

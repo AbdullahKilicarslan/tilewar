@@ -1,0 +1,206 @@
+/* Lobby.css */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=MedievalSharp&display=swap');
+
+.lobby-wrapper {
+  height: 100vh;
+  width: 100%;
+  background: radial-gradient(circle, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.9) 100%), 
+              url('https://images.unsplash.com/photo-1599408162165-4309312f0e0b?q=80&w=2000');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.main-lobby-card {
+  background: rgba(43, 24, 16, 0.95);
+  width: 90%;
+  max-width: 600px; /* İlk ekrandaki gibi dar ve heybetli */
+  max-height: 90vh;
+  border: 4px double #d4af37;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-shadow: 0 0 50px #000;
+  position: relative;
+  overflow-y: auto; /* İçerik çok olursa kendi içinde kayar */
+}
+
+/* Başlık Beyaz ve Parlak */
+.lobby-title {
+  font-family: 'Cinzel Decorative', serif;
+  color: #f0f0f0;
+  text-align: center;
+  font-size: 3rem;
+  text-shadow: 0 0 15px rgba(255,255,255,0.4), 2px 2px 5px #000;
+  margin-bottom: 0.5rem;
+}
+
+/* Harita Bölümü - Yatay ama Sığdırılmış */
+.map-container {
+  border-top: 1px solid rgba(212, 175, 55, 0.3);
+  padding-top: 1rem;
+}
+
+.map-label {
+  color: #d4af37;
+  display: block;
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.map-selector {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.map-name {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 0.8rem;
+  color: #f2e3bc; /* Parşömen rengi yazı */
+  padding: 5px 2px;
+  text-align: center;
+  background: rgba(26, 15, 10, 0.8);
+  border-top: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.map-item {
+  flex: 1;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: 0.3s;
+  position: relative;
+}
+
+.map-item img {
+  width: 100%;
+  height: 50px; /* Biraz daraltıldı ki isme yer kalsın */
+  object-fit: cover;
+  filter: sepia(1) brightness(0.7);
+  transition: 0.3s;
+}
+
+.map-item.active {
+  border-color: #d4af37;
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+}
+
+.map-item.active img {
+  filter: none;
+  brightness: 1.1;
+}
+.map-item.active .map-name {
+  background: #d4af37;
+  color: #1a0f0a;
+  font-weight: bold;
+}
+/* Giriş Alanları - İlk Ekran Buton Tarzında */
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.medieval-input-wrap {
+  background: #f2e3bc; /* Parşömen */
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  clip-path: polygon(2% 0%, 98% 0%, 100% 50%, 98% 100%, 2% 100%, 0% 50%);
+}
+
+.m-input {
+  background: transparent;
+  border: none;
+  font-family: 'MedievalSharp';
+  font-size: 1.1rem;
+  width: 100%;
+  outline: none;
+  color: #2b1810;
+}
+
+/* Liste Alanı */
+.lobby-player-list {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.p-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+  font-size: 0.95rem;
+}
+
+/* Savaş Butonu */
+.war-btn {
+  background: #d4af37;
+  color: #1a0f0a;
+  border: none;
+  padding: 15px;
+  font-family: 'Cinzel Decorative';
+  font-weight: bold;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+
+.war-btn:hover {
+  background: #f0f0f0;
+  box-shadow: 0 0 20px #d4af37;
+}
+
+/* Kullanıcı Listesi Yazı Stili */
+.p-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+  color: #ffffff; /* Beyaz ve net okunur */
+  font-size: 1rem;
+  text-shadow: 1px 1px 2px #000;
+}
+
+/* Onay / Hazır Butonu Stili */
+.ready-toggle-btn {
+  background: #f2e3bc;
+  border: 1px solid #8b4513;
+  padding: 5px 15px;
+  font-family: 'MedievalSharp';
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #2b1810;
+  font-weight: bold;
+}
+
+.ready-toggle-btn.is-ready {
+  background: #4caf50;
+  color: white;
+  border-color: #1e3a1f;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.4);
+}
+
+.ready-toggle-btn:hover {
+  transform: scale(1.05);
+}
+
+/* Deste Bilgisi Okunabilirliği */
+.deck-info {
+  color: #d4af37; /* Altın rengi ama daha belirgin */
+  font-size: 0.85rem;
+  margin-left: 10px;
+  opacity: 0.9;
+}

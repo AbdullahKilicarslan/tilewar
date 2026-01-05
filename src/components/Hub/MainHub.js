@@ -7,13 +7,20 @@ import { Users, Send, Copy, Check } from 'lucide-react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
-import { Button, Box, Stack, Typography } from '@mui/material';
+import { Button, Box, Stack, Typography, ButtonBase } from '@mui/material';
 
 import { useAppContext } from '../../contexts/AppContext';
+import { useMainMenuContext } from '../../contexts/MainMenuContext';
 
-export default function PeerJSChat(AppContext) {
+
+import Bg1 from '../../assets/bg/bg-1.png';
+import BgBt from '../../assets/bg/bg-bt.png';
+import BgPeerr from '../../assets/bg/bg-peer.png';
+
+const MainHub = () => {
 
   const { setGameScreen, setTrigger } = useAppContext();
+
 
   const [peer, setPeer] = useState(null);
   const [myId, setMyId] = useState('');
@@ -28,9 +35,58 @@ export default function PeerJSChat(AppContext) {
   const [isHost, setIsHost] = useState(null);
   const [isLogin, setIsLogin] = useState(true);
 
+  const [bgImage, setBgImage] = useState(Bg1);
+
+  const ImageButton = ({ title, url, onClick, height = '70px', width = '200px' }) => (
+    <ButtonBase
+      focusRipple
+      onClick={onClick}
+      style={{
+        width: width,
+        height: height,
+        position: 'relative',
+      }}
+    >
+      {/* Arka Plan Görseli */}
+      <Box
+        sx={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center 40%',
+          backgroundImage: `url(${url})`,
+          borderRadius: '8px',
+          '&:hover': {
+            opacity: 0.8, // Üzerine gelince kararma efekti
+          }
+        }}
+      />
+      {/* Görsel Üzerindeki Yazı */}
+      <Typography
+        component="span"
+        variant="subtitle1"
+        color="inherit"
+        sx={{
+          position: 'relative',
+          p: 4,
+          pt: 2,
+          pb: (theme) => `calc(${theme.spacing(1)} + 6px)`,
+          color: 'white',
+          fontWeight: 'bold',
+          //backgroundColor: 'rgba(0,0,0,0.3)', // Yazının okunması için hafif gölge
+        }}
+      >
+        {title}
+      </Typography>
+    </ButtonBase>
+  );
+
   const hostToPeer = () => {
 
-      const newPeer = new Peer();
+    const newPeer = new Peer();
 
     newPeer.on('open', (id) => {
       setMyId(id);
@@ -139,31 +195,29 @@ export default function PeerJSChat(AppContext) {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Container >
+      <Container maxWidth={false} sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        // State bazlı dinamik arka plan ayarları
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${bgImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        transition: 'background-image 0.5s ease-in-out', // Geçiş efekti
+      }}>
         {isLogin ?
           <Box
             display="flex"
             justifyContent="center"
             alignItems="center"
             minHeight="100vh"
-            sx={{ backgroundColor: '#f5f5f5' }}
+
           // Arka plan rengini opsiyonel olarak ekledim
           >
-            <Stack spacing={4} alignItems="center">
-              <Typography variant="h4" component="h1" gutterBottom>
-                Tile War
-              </Typography>
+            <ImageButton title={"Oyun Kur"} url={BgBt} onClick={() => { setIsHost(true); setIsLogin(false) }}></ImageButton>
+            <ImageButton title={"Oyuna Gir"} url={BgBt} onClick={() => { setIsHost(false); setIsLogin(false) }}></ImageButton>
 
-              {/* Butonları yan yana dizmek için row, mobilde alt alta olması için direction ayarlanabilir */}
-              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                <Button variant="contained" size="large" onClick={() => { setIsHost(true); setIsLogin(false) }} sx={{ width: 200, height: 60 }}          >
-                  Oyun Kur
-                </Button>
-                <Button variant="outlined" size="large" onClick={() => { setIsHost(false); setIsLogin(false) }} sx={{ width: 200, height: 60 }}          >
-                  Katıl
-                </Button>
-              </Stack>
-            </Stack>
           </Box>
           : isHost ?
             <Box
@@ -171,27 +225,25 @@ export default function PeerJSChat(AppContext) {
               justifyContent="center"
               alignItems="center"
               minHeight="100vh"
-              sx={{ backgroundColor: '#f5f5f5' }}
+
             // Arka plan rengini opsiyonel olarak ekledim
             >
-              <Stack spacing={4} alignItems="center">
-                <Typography variant="h4" component="h1" gutterBottom>
-                 Oyun Kurma Ekranı
-                </Typography>
+              <Grid container spacing={2}>
+                <Grid size={12} align="center">
+                  <ImageButton title={"Sunucuya Bağlan"} url={BgBt} onClick={() => { hostToPeer() }}></ImageButton>
 
-                {/* Butonları yan yana dizmek için row, mobilde alt alta olması için direction ayarlanabilir */}
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                  <Button variant="contained" size="large" onClick={() => { setIsHost(true); setIsLogin(false) }} sx={{ width: 200, height: 60 }}          >
-                   Sunucuya Bağlan
-                  </Button>
-                  <Button variant="outlined" size="large" onClick={() => { setIsHost(false); setIsLogin(false) }} sx={{ width: 200, height: 60 }}          >
-                    Katıl
-                  </Button>
-                </Stack>
-              </Stack>
+                </Grid>
+                <Grid size={12} align="center">
+
+                  <ImageButton title={myId} url={BgPeerr} width='300px' height='150px' ></ImageButton>
+
+                  <ImageButton title={myId} url={BgBt} onClick={() => { setGameScreen(true) }} ></ImageButton>
+
+                </Grid>
+              </Grid>
             </Box>
 
-            :<Container >
+            : <Container >
               <Box sx={{ flexGrow: 1 }}>
                 <Grid container spacing={2}>
                   <Grid size={8}>
@@ -352,3 +404,5 @@ export default function PeerJSChat(AppContext) {
 
   );
 }
+
+export default MainHub;

@@ -28,7 +28,9 @@ export const AppProvider = ({ children }) => {
     setData,
     trigger,
     setTrigger,
-    myFunction
+    myFunction,
+    gameScreen,
+    setGameScreen
   };
 
   return (
