@@ -1,0 +1,114 @@
+/* Connection.css */
+
+.connection-wrapper {
+  height: 100vh;
+  width: 100%;
+  background: radial-gradient(circle, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.95) 100%), 
+              url('https://images.unsplash.com/photo-1533154683836-84ea7a0bc310?q=80&w=2000');
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.connection-card {
+  background: #f2e3bc; /* Parşömen rengi */
+  width: 90%;
+  max-width: 450px;
+  padding: 3rem 2rem;
+  border-radius: 5px;
+  position: relative;
+  box-shadow: 0 0 40px rgba(0,0,0,0.8), 20px 20px 60px rgba(0,0,0,0.5);
+  border: 1px solid #d4af37;
+  /* Kağıt dokusu */
+  background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+  text-align: center;
+}
+
+/* Parşömen rulo efekti (Üst ve Alt) */
+.connection-card::before, .connection-card::after {
+  content: "";
+  position: absolute;
+  left: -5%;
+  width: 110%;
+  height: 20px;
+  background: #8b4513;
+  border: 2px solid #5e300a;
+  border-radius: 10px;
+}
+.connection-card::before { top: -10px; }
+.connection-card::after { bottom: -10px; }
+
+.connection-title {
+  font-family: 'Cinzel Decorative', serif;
+  color: #2b1810;
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 2px double #d4af37;
+  padding-bottom: 10px;
+}
+
+.connection-subtitle {
+  font-family: 'MedievalSharp', cursive;
+  color: #5e300a;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+}
+
+.id-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 2rem;
+}
+
+.id-label {
+  font-family: 'MedievalSharp', cursive;
+  color: #8b4513;
+  font-weight: bold;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.medieval-id-input {
+  background: rgba(255, 255, 255, 0.4);
+  border: 2px solid #8b4513;
+  padding: 15px;
+  font-family: 'MedievalSharp', cursive;
+  font-size: 1.3rem;
+  color: #2b1810;
+  text-align: center;
+  letter-spacing: 5px;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.medieval-id-input:focus {
+  background: white;
+  border-color: #d4af37;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+}
+
+.connect-btn {
+  background: #8b0000; /* Kan kırmızısı/Mühür rengi */
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  clip-path: polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0 50%);
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.connect-btn:hover {
+  background: #d4af37;
+  color: #1a0f0a;
+  transform: scale(1.02);
+}
+
+.connect-btn:active {
+  transform: scale(0.98);
+}

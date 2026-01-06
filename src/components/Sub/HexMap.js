@@ -77,7 +77,7 @@ function Unit({ unitRef }) {
     </mesh>
   )
 }
-
+ 
 export default function HexMap() {
 
   const { data, trigger } = useAppContext();
@@ -157,7 +157,17 @@ export default function HexMap() {
     return temp;
   }, [xSpacing, zSpacing]);
 
-
+const center = useMemo(() => {
+  if (cells.length === 0) return [0, 0, 0];
+  
+  const xs = cells.map(c => c.position[0]);
+  const zs = cells.map(c => c.position[2]);
+  
+  const centerX = (Math.min(...xs) + Math.max(...xs)) / 2;
+  const centerZ = (Math.min(...zs) + Math.max(...zs)) / 2;
+  
+  return [centerX, 0, centerZ];
+}, [cells]);
   // Rastgele Hücreye Gitme Fonksiyonu
   const moveUnit = () => {
     if (mapData.length === 0) return;
@@ -336,30 +346,23 @@ export default function HexMap() {
         <color attach="background" args={['#a2d2ff']} />
         {/* <fog attach="fog" args={['#f0f0f0', 10, 50]} /> */}
         <ambientLight intensity={1} />
-
-
-
         <Sky sunPosition={[100, 20, 100]} distance={450000} />
-
-
         {/* Haritayı Çiz */}
         {cells.map((cell) => (
           <Hexagon type={cell.type} key={cell.id} position={cell.position} texturePath={cell.tex} height={cell.height} color={cell.color} emissive={cell.color} emissiveIntensity={cell.emissiveIntensity} />
         ))}
-
-
-
-
-
-
-        {/* Birimi Çiz */}
+       {/* Birimi Çiz */}
         <Unit unitRef={unitRef} />
-
-        <OrbitControls
-          onChange={(e) => {
-            const { x, y, z } = e.target.object.position;
-            //console.log(`Kamera Pozisyonu: x: ${x.toFixed(2)}, y: ${y.toFixed(2)}, z: ${z.toFixed(2)}`);
-          }}
+        <OrbitControls target={center}
+        makeDefault 
+        enablePan={false}
+  // Kameranın yerin altına inmesini engeller (90 derece sınırı)
+  maxPolarAngle={Math.PI / 2.1} 
+  // Kameranın çok fazla uzaklaşıp kaybolmasını engeller
+  maxDistance={50}
+  // Çok fazla yaklaşıp hücrelerin içine girmesini engeller
+  minDistance={5}
+        
         />
       </Canvas>
     </div>

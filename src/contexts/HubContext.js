@@ -25,6 +25,9 @@ export const HubProvider = ({ children }) => {
   const [copied, setCopied] = useState(false);
   const connectionsRef = useRef({});
 
+ const addMessage = (sender, text) => {
+    console.log(sender+': '+text);
+  };
 
   const hostToPeer = () => {
 
@@ -76,10 +79,29 @@ export const HubProvider = ({ children }) => {
     });
   };
 
+const connectToPeer = () => {
+    if (!targetId.trim() || !peer) return;
+
+    if (targetId === hostId) {
+      addMessage('Sistem', 'Kendinize bağlanamazsınız!');
+      return;
+    }
+
+    if (connectionsRef.current[targetId]) {
+      addMessage('Sistem', 'Bu peer\'e zaten bağlısınız!');
+      return;
+    }
+
+    const conn = peer.connect(targetId);
+    setupConnection(conn);
+    setTargetId('');
+  };
 
   const value = {
     hostToPeer,
-    hostId
+    hostId,
+    connectToPeer,
+    setTargetId
   };
 
   return (

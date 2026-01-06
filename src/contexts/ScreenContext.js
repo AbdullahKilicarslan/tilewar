@@ -20,6 +20,8 @@ export const ScreenProvider = ({ children }) => {
   const [isLobyScreen, setLobyScreen] = useState(false);
   const [isMapScreen, setMapScreen] = useState(false);
 
+  const [isHost, setIsHost] = useState(true);
+
   const [peerId, setPeerId] = useState(null);
 
   const OpenMenuScreen = () => {
@@ -30,14 +32,14 @@ export const ScreenProvider = ({ children }) => {
     setMapScreen(false);
   }
 
-   const OpenHostScreen = () => {
+  const OpenHostScreen = () => {
     setMainMenuScreen(false);
     setHostScreen(true);
     setClientScreen(false);
     setLobyScreen(false);
     setMapScreen(false);
   }
-   const OpenClientScreen = () => {
+  const OpenClientScreen = () => {
     setMainMenuScreen(false);
     setHostScreen(false);
     setClientScreen(true);
@@ -74,7 +76,10 @@ export const ScreenProvider = ({ children }) => {
     OpenMapScreen,
 
     peerId,
-    setPeerId
+    setPeerId,
+
+    isHost,
+    setIsHost
   };
 
   return (

@@ -6,10 +6,10 @@ import { useScreenContext } from '../../contexts/ScreenContext';
 
 const Lobby = () => {
 
-    const { OpenMapScreen  } = useScreenContext();
+    const { OpenMapScreen ,isHost} = useScreenContext();
 
-  const handleLobyClick = () => {
-      OpenMapScreen();
+    const handleLobyClick = () => {
+        OpenMapScreen();
     };
 
     const [selectedMap, setSelectedMap] = useState(1);
@@ -41,7 +41,7 @@ const Lobby = () => {
                                 <div
                                     key={map.id}
                                     className={`map-item ${selectedMap === map.id ? 'active' : ''}`}
-                                    onClick={() => !isReady && setSelectedMap(map.id)} // Hazırken harita değiştirilemez
+                                    onClick={() => isHost && !isReady && setSelectedMap(map.id)} // Hazırken harita değiştirilemez
                                 >
                                     <img src={map.img} alt={map.name} />
                                     <div className="map-name">{map.name}</div>
@@ -102,9 +102,9 @@ const Lobby = () => {
                     </div>
 
                     {/* Ana Savaş Butonu */}
-                    <button    onClick={() => handleLobyClick() }
+                    <button onClick={() => handleLobyClick()}
                         className="war-btn"
-                        disabled={!isReady}
+                        disabled={!isReady&&!isHost}
                         style={{
                             opacity: isReady ? 1 : 0.3,
                             filter: isReady ? 'none' : 'grayscale(1)',
