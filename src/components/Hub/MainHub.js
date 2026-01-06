@@ -10,7 +10,7 @@ import Container from '@mui/material/Container';
 import { Button, Box, Stack, Typography, ButtonBase } from '@mui/material';
 
 import { useAppContext } from '../../contexts/AppContext';
-import { useMainMenuContext } from '../../contexts/MainMenuContext';
+import { useScreenContext } from '../../contexts/ScreenContext';
 
 
 import Bg1 from '../../assets/bg/bg-1.png';

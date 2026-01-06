@@ -2,8 +2,16 @@ import React, { useState } from 'react';
 import { Shield, User, Scroll, Sword, CheckCircle, Circle, Map as MapIcon } from 'lucide-react';
 import './css/MainMenu.css';
 import './css/LobbyScreen.css';
+import { useScreenContext } from '../../contexts/ScreenContext';
 
 const Lobby = () => {
+
+    const { OpenMapScreen  } = useScreenContext();
+
+  const handleLobyClick = () => {
+      OpenMapScreen();
+    };
+
     const [selectedMap, setSelectedMap] = useState(1);
     const [isReady, setIsReady] = useState(false);
 
@@ -94,7 +102,7 @@ const Lobby = () => {
                     </div>
 
                     {/* Ana Savaş Butonu */}
-                    <button
+                    <button    onClick={() => handleLobyClick() }
                         className="war-btn"
                         disabled={!isReady}
                         style={{

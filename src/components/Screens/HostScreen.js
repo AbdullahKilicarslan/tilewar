@@ -4,11 +4,11 @@ import { useState, useEffect, useRef } from 'react';
 import { HousePlug } from 'lucide-react';
 import './css/HostMenu.css';
 import './css/MainMenu.css';
-import { useMainMenuContext } from '../../contexts/MainMenuContext';
+import { useScreenContext } from '../../contexts/ScreenContext';
 import { useHubContext } from '../../contexts/HubContext';
 
 const HostScreen = () => {
-    const { setMainMenuScreen, setHostScreen, setLobyScreen } = useMainMenuContext();
+    const { OpenLobbyScreen} = useScreenContext();
     const { hostToPeer, hostId } = useHubContext();
 
 
@@ -25,9 +25,7 @@ const HostScreen = () => {
         setTimeout(() => setCopied(false), 2000);
     };
      const handleLobyClick = () => {
-       setLobyScreen(true);
-       setMainMenuScreen(false);
-       setHostScreen(false);
+       OpenLobbyScreen();
     };
     return (
         <div className="menu-container">

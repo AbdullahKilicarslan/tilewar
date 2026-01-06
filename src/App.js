@@ -3,7 +3,7 @@ import Game from './components/Game'; // HexMap.js dosyasının aynı klasörde 
 
 import './App.css';
 import { AppProvider } from './contexts/AppContext';
-import { MainMenuProvider } from './contexts/MainMenuContext';
+import { ScreenProvider } from './contexts/ScreenContext';
 import { HubProvider } from './contexts/HubContext';
 
 function App() {
@@ -12,9 +12,9 @@ function App() {
     <div className="App">
       <AppProvider>
         <HubProvider>
-          <MainMenuProvider>
+          <ScreenProvider>
             <Game />
-          </MainMenuProvider>
+          </ScreenProvider>
         </HubProvider>
       </AppProvider>
     </div>

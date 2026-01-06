@@ -1,21 +1,11 @@
 import React from 'react';
 import { Sword, Settings, LogOut, ShieldAlert } from 'lucide-react';
 import './css/MainMenu.css';
-import { useMainMenuContext } from '../../contexts/MainMenuContext';
+import { useScreenContext } from '../../contexts/ScreenContext';
 
 const MainMenu = () => {
-    const { setMainMenuScreen, setHostScreen,setClientScreen } = useMainMenuContext();
+    const { OpenHostScreen ,OpenClientScreen} = useScreenContext();
 
-    const handleHostClick = () => {
-        setHostScreen(true);
-        setMainMenuScreen(false);
-        setClientScreen(false);
-    }
-     const handleClientClick = () => {
-        setHostScreen(false);
-        setMainMenuScreen(false);
-        setClientScreen(true);
-    }
     return (
         <div className="menu-container">
             <div className="main-card">
@@ -27,13 +17,13 @@ const MainMenu = () => {
                 <div className="title-underline"></div>
 
                 <div className="menu-options">
-                    <button className="medieval-btn" onClick={handleHostClick}>
+                    <button className="medieval-btn" onClick={OpenHostScreen}>
                         <Sword className="btn-icon" />
                         <span>Oyun Kur</span>
 
                     </button>
 
-                    <button className="medieval-btn" onClick={handleClientClick}>
+                    <button className="medieval-btn" onClick={OpenClientScreen}>
                         <ShieldAlert className="btn-icon" />
                         <span>Oyuna Katıl</span>
                     </button>
