@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from 'react';
 import HexMap from './sub/HexMap'; // HexMap.js dosyasının aynı klasörde olduğunu varsayıyoruz
-import MainHub from './hub/MainHub'; // HexMap.js dosyasının aynı klasörde olduğunu varsayıyoruz
+//import MainHub from './hub/MainHub'; // HexMap.js dosyasının aynı klasörde olduğunu varsayıyoruz
 
 import MainMenu from './screens/FirstScreen'; // HexMap.js dosyasının aynı klasörde olduğunu varsayıyoruz
 import HostScreen from './screens/HostScreen'; // HexMap.js dosyasının aynı klasörde olduğunu varsayıyoruz
