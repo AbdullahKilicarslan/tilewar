@@ -64,7 +64,7 @@ export const HubProvider = ({ children }) => {
     });
 
     conn.on('data', (data) => {
-    //  addMessage(conn.peer.substring(0, 8), data);
+           console.log('Incoming data', data);
     });
 
     conn.on('close', () => {
@@ -97,11 +97,26 @@ const connectToPeer = () => {
     setTargetId('');
   };
 
+  
+  const sendMessage = (message) => {
+    
+    const connArray = Object.values(connectionsRef.current);
+
+    if (connArray.length === 0) {
+      addMessage('Sistem', 'Hiçbir peer\'e bağlı değilsiniz!');
+      return;
+    }
+  connArray.forEach(conn => {
+      conn.send(message);
+    });
+  };
+
   const value = {
     hostToPeer,
     hostId,
     connectToPeer,
-    setTargetId
+    setTargetId,
+    sendMessage
   };
 
   return (

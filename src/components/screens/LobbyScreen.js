@@ -3,10 +3,12 @@ import { Shield, User, Scroll, Sword, CheckCircle, Circle, Map as MapIcon } from
 import './css/MainMenu.css';
 import './css/LobbyScreen.css';
 import { useScreenContext } from '../../contexts/ScreenContext';
+import { useHubContext } from '../../contexts/HubContext';
 
 const Lobby = () => {
 
     const { OpenMapScreen ,isHost} = useScreenContext();
+    const { hostToPeer, hostId ,sendMessage } = useHubContext();
 
     const handleLobyClick = () => {
         OpenMapScreen();
@@ -14,6 +16,11 @@ const Lobby = () => {
 
     const [selectedMap, setSelectedMap] = useState(1);
     const [isReady, setIsReady] = useState(false);
+
+const userReady = () =>{
+    sendMessage(hostId);
+    setIsReady(!isReady)
+}
 
     // Harita Verileri
     const maps = [
@@ -67,7 +74,7 @@ const Lobby = () => {
 
                         <button
                             className={`ready-toggle-btn ${isReady ? 'is-ready' : ''}`}
-                            onClick={() => setIsReady(!isReady)}
+                            onClick={() => userReady()}
                         >
                             {isReady ? "ORDUYU DURDUR (İptal)" : "MÜHRÜ BAS & HAZIR OL"}
                         </button>
