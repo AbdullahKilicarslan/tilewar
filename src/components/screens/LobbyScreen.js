@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Shield, User, Scroll, Sword, CheckCircle, Circle, Map as MapIcon } from 'lucide-react';
 import './css/MainMenu.css';
 import './css/LobbyScreen.css';
@@ -7,20 +7,52 @@ import { useHubContext } from '../../contexts/HubContext';
 
 const Lobby = () => {
 
-    const { OpenMapScreen ,isHost} = useScreenContext();
-    const { hostToPeer, hostId ,sendMessage } = useHubContext();
+    const { OpenMapScreen, isHost } = useScreenContext();
+    const { hostId, handleSend, users, hostMapId, setHostMapId, clientMapScreen } = useHubContext();
 
     const handleLobyClick = () => {
         OpenMapScreen();
+        handleSend({ type: 'mapScreenStatus', status: true });
     };
+
+    const [userName, setUserName] = useState('');
+    const [selectedDeck, setSelectedDeck] = useState('Kuzey Krallığı');
 
     const [selectedMap, setSelectedMap] = useState(1);
     const [isReady, setIsReady] = useState(false);
+    const [isReadyAll, setIsReadyAll] = useState(false);
 
-const userReady = () =>{
-    sendMessage(hostId);
-    setIsReady(!isReady)
-}
+
+    useEffect(() => {
+        if (clientMapScreen)
+            OpenMapScreen();
+    }, [clientMapScreen]);
+
+    useEffect(() => {
+        if (users.length > 0)
+            setIsReadyAll(users.every(u => u.ready === true) && isReady);
+    }, [users, isReady]);
+
+    const handleSelectedMap = (e) => {
+        setSelectedMap(e);
+        setHostMapId(e);
+        // Değişikliği diğer oyunculara bildir (HubContext'teki handleSend'i kullanır)  
+        handleSend({ type: 'mapStatus', selectedMap: e });
+    };
+
+
+    const handleDeckChange = (e) => {
+        const newDeck = e.target.value;
+        setSelectedDeck(newDeck);
+
+        // Değişikliği diğer oyunculara bildir (HubContext'teki handleSend'i kullanır)
+        handleSend({ type: 'readyStatus', ready: isReady, name: userName, deck: newDeck });
+    };
+
+    const userReady = () => {
+        handleSend({ type: 'readyStatus', ready: !isReady, name: userName, deck: selectedDeck });
+        setIsReady(!isReady)
+    }
 
     // Harita Verileri
     const maps = [
@@ -29,10 +61,6 @@ const userReady = () =>{
         { id: 3, name: "Buzlu Geçit", img: "https://picsum.photos/id/12/100/60" },
     ];
 
-    const [otherPlayers] = useState([
-        { id: 1, name: "Kral_Arthur", deck: "Kuzey Krallığı", ready: true },
-        { id: 2, name: "Mordred_66", deck: "Barbar İstilası", ready: false },
-    ]);
 
     return (
         <div className="menu-container">
@@ -47,8 +75,8 @@ const userReady = () =>{
                             {maps.map(map => (
                                 <div
                                     key={map.id}
-                                    className={`map-item ${selectedMap === map.id ? 'active' : ''}`}
-                                    onClick={() => isHost && !isReady && setSelectedMap(map.id)} // Hazırken harita değiştirilemez
+                                    className={`map-item ${hostMapId === map.id ? 'active' : ''}`}
+                                    onClick={() => isHost && !isReady && handleSelectedMap(map.id)} // Hazırken harita değiştirilemez
                                 >
                                     <img src={map.img} alt={map.name} />
                                     <div className="map-name">{map.name}</div>
@@ -61,14 +89,21 @@ const userReady = () =>{
                     <div className="form-section">
                         <div className="medieval-input-wrap">
                             <User size={18} color="#8b4513" />
-                            <input className="m-input" placeholder="Karakter İsmi..." disabled={isReady} />
+                            <input className="m-input" placeholder="Karakter İsmi..." value={userName}
+                                onChange={(e) => setUserName(e.target.value)}
+                                disabled={isReady} />
                         </div>
                         <div className="medieval-input-wrap">
                             <Scroll size={18} color="#8b4513" />
-                            <select className="m-input" disabled={isReady}>
-                                <option>Deste: Kuzey Krallığı</option>
-                                <option>Deste: Barbar İstilası</option>
-                                <option>Deste: Gölge Alayı</option>
+                            <select
+                                className="m-input"
+                                disabled={isReady}
+                                value={selectedDeck} // State'ten oku
+                                onChange={handleDeckChange} // Değişince state'i ve odayı güncelle
+                            >
+                                <option value="Kuzey Krallığı">Deste: Kuzey Krallığı</option>
+                                <option value="Barbar İstilası">Deste: Barbar İstilası</option>
+                                <option value="Gölge Alayı">Deste: Gölge Alayı</option>
                             </select>
                         </div>
 
@@ -84,10 +119,10 @@ const userReady = () =>{
                     <div className="lobby-player-list">
                         <p style={{ color: '#d4af37', fontSize: '0.7rem', letterSpacing: '2px', marginBottom: '8px', textAlign: 'center' }}>MÜTTEFİKLER VE DÜŞMANLAR</p>
 
-                        {otherPlayers.map(p => (
+                        {users?.map(p => (
                             <div className="p-row" key={p.id}>
                                 <div>
-                                    <span style={{ fontWeight: 'bold' }}>{p.name}</span>
+                                    <span style={{ fontWeight: 'bold' }}>{p.name ?? 'İsim bekleniyor...'}</span>
                                     <span className="deck-info">[{p.deck}]</span>
                                 </div>
                                 <span style={{ color: p.ready ? '#4caf50' : '#d4af37', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '5px' }}>
@@ -99,8 +134,8 @@ const userReady = () =>{
                         {/* Mevcut Kullanıcı (Sen) */}
                         <div className="p-row" style={{ borderLeft: '3px solid #d4af37', background: 'rgba(212,175,55,0.1)' }}>
                             <div>
-                                <span style={{ fontWeight: 'bold', color: '#fff' }}>Sen</span>
-                                <span className="deck-info">[Seçili Deste]</span>
+                                <span style={{ fontWeight: 'bold', color: '#fff' }}>Sen:{userName}</span>
+                                <span className="deck-info">[{selectedDeck}]</span>
                             </div>
                             <span style={{ color: isReady ? '#4caf50' : '#d4af37', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '5px' }}>
                                 {isReady ? <CheckCircle size={14} /> : <Circle size={14} />} {isReady ? 'HAZIR' : 'BEKLİYOR'}
@@ -109,18 +144,18 @@ const userReady = () =>{
                     </div>
 
                     {/* Ana Savaş Butonu */}
-                    <button onClick={() => handleLobyClick()}
+                    {isHost && <button onClick={() => handleLobyClick()}
                         className="war-btn"
-                        disabled={!isReady&&!isHost}
+                        disabled={!isReadyAll}
                         style={{
-                            opacity: isReady ? 1 : 0.3,
-                            filter: isReady ? 'none' : 'grayscale(1)',
-                            cursor: isReady ? 'pointer' : 'not-allowed'
+                            opacity: isReadyAll ? 1 : 0.3,
+                            filter: isReadyAll ? 'none' : 'grayscale(1)',
+                            cursor: isReadyAll ? 'pointer' : 'not-allowed'
                         }}
                     >
                         <Sword size={24} style={{ marginRight: '12px' }} />
                         SAVAŞI BAŞLAT
-                    </button>
+                    </button>}
 
                     {/* Dekoratif Köşeler */}
                     <div style={{ position: 'absolute', top: '15px', left: '15px', color: '#d4af37', opacity: 0.5, pointerEvents: 'none' }}>✦</div>

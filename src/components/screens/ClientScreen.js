@@ -6,24 +6,22 @@ import { useHubContext } from '../../contexts/HubContext';
 
 const ConnectionScreen = () => {
     const { OpenLobbyScreen ,setIsHost} = useScreenContext();
-    const { hostToPeer, hostId, setTargetId, connectToPeer } = useHubContext();
+    const {  hostId, connectRoom  } = useHubContext();
 
 
     const [connectionId, setConnectionId] = useState('');
 
     useEffect(() => {
         setIsHost(false);
-        hostToPeer();
     }, []);
+
     const handleConnect = () => {
         if (connectionId.length > 0) {
             if (hostId == '') {
                 alert("Sunucu bağlantısı tekrar kuruluyor, lütfen tekrar deneyin.");
-                hostToPeer();
             }
             else {
-                setTargetId(connectionId)
-                connectToPeer();
+               connectRoom(connectionId);
                 OpenLobbyScreen();
             }
         } else {

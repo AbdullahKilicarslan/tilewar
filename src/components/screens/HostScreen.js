@@ -8,24 +8,27 @@ import { useScreenContext } from '../../contexts/ScreenContext';
 import { useHubContext } from '../../contexts/HubContext';
 
 const HostScreen = () => {
-    const { OpenLobbyScreen} = useScreenContext();
-    const { hostToPeer, hostId } = useHubContext();
+    const { OpenLobbyScreen } = useScreenContext();
+    const { connectRoom, hostId } = useHubContext();
 
 
     const [connectPeer, setConnectPeer] = useState(false);
     const [copied, setCopied] = useState(false);
 
     const handleHostClick = () => {
-        if (hostId == '')
-            hostToPeer();
+        connectRoom();
     }
+    useEffect(() => {
+        copyId();
+    }, [hostId]);
+    
     const copyId = () => {
         navigator.clipboard.writeText(hostId);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
-     const handleLobyClick = () => {
-       OpenLobbyScreen();
+    const handleLobyClick = () => {
+        OpenLobbyScreen();
     };
     return (
         <div className="menu-container">
@@ -40,9 +43,9 @@ const HostScreen = () => {
                 <div className="menu-options">
                     <button className="medieval-btn" onClick={handleHostClick}>
                         <HousePlug className="btn-icon" />
-                        <span>{hostId == '' ? 'Sunucuya Bağlan' : 'Sunucuya Bağlanıldı'}</span>
+                        <span>{hostId == null ? 'Sunucuya Bağlan' : 'Sunucuya Bağlanıldı'}</span>
                     </button>
-                    {hostId != '' ?
+                    {hostId &&
                         <>
                             <button className="medieval-btn" onClick={copyId}>
                                 <span>{copied ? "Koplayandı" : hostId}</span>
@@ -50,11 +53,7 @@ const HostScreen = () => {
                             <button className="medieval-btn" onClick={handleLobyClick}>
                                 <span>Lobiye Geç</span>
                             </button>
-                        </>
-
-
-
-                        : <>       </>}
+                        </>}
 
 
                 </div>
