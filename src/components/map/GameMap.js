@@ -11,6 +11,7 @@ import BottomBar from './hud/BottomBar'
 import TopBar from './hud/TopBar'
 import TurnControl from './hud/TurnControl'
 import PlayerList from './hud/PlayerList'
+import { Castle } from './../model/castle';
 
 
 // Altıgen Bileşeni (Görsel Harita)
@@ -38,40 +39,76 @@ function HexagonTexture({ position, texturePath, height }) {
 }
 
 function Hexagon({ position, color, height, emissiveIntensity, type }) {
-  let metalness = 1;
-  let roughness = 0.05;
-  let envMapIntensity = 2;
-
-  const { nodes, materials } = useGLTF("/assets/3d/coin-3098.glb")
-
+  const [hovered, setHovered] = React.useState(false);
+  
+  const baseColor = color === 'gold' ? '#d4af37' : color;
+  const isSpecial = type === 'gold' || type === 'stronghold';
 
   return (
-    <>
-      {type === 'gold' &&
-        <CoinPouch position={[position[0], position[1] + 1, position[2]]} scale={0.2} speed={2} />
-      }
-      <group position={position}>
+    <group position={position}>
+      {/* Altın kesesi varsa, etkileşimi engellememesi için mesh dışında tutuyoruz */}
+      {type === 'gold' && (
+        <CoinPouch 
+          position={[0, height / 2 + 0.5, 0]} 
+          scale={0.2} 
+          speed={2} 
+        />
+      )}
+      
+       {type === 'stronghold' && (
+        <Castle 
+          position={[0, height / 2 , 0]} 
+          scale={0.7} 
+          speed={2} 
+        />
+      )}
+      <mesh 
+        rotation={[Math.PI, 0, 0]} 
+        castShadow 
+        receiveShadow
+        // Hover olaylarını mesh üzerine aldık
+        onPointerEnter={(e) => {
+          e.stopPropagation(); // Diğer objelerin tetiklenmesini durdur
+          setHovered(true);
+        }}
+        onPointerLeave={(e) => {
+          setHovered(false);
+        }}
+      >
+        <cylinderGeometry args={[1, 1, height, 6]} />
+        
+        {/* Yanlar */}
+        <meshStandardMaterial attach="material-0" color={baseColor} metalness={0.5} roughness={0.7} />
+        
+        {/* Alt */}
+        <meshStandardMaterial attach="material-1" color="#050505" />
 
-        <mesh rotation={[Math.PI, 0, 0]}>
-          <cylinderGeometry args={[1, 1, height, 6]} />
-          <meshStandardMaterial attach="material-0" color={color} height={height} emissiveIntensity={emissiveIntensity} roughness={roughness} envMapIntensity={envMapIntensity} />
-          <meshStandardMaterial attach="material-1" color={color} height={height} emissiveIntensity={emissiveIntensity} roughness={roughness} envMapIntensity={envMapIntensity} />
-          <meshStandardMaterial attach="material-2" color={color} height={height} emissiveIntensity={emissiveIntensity} roughness={roughness} envMapIntensity={envMapIntensity} />
-        </mesh>
+        {/* ÜST KAPAK - Hover burada işlenir */}
+        <meshStandardMaterial 
+          attach="material-2" 
+          color={hovered ? "#ffffff" : baseColor} 
+          metalness={isSpecial ? 1 : 0.3} 
+          roughness={isSpecial ? 0.1 : 0.4}
+          emissive={hovered ? "#ffffff" : baseColor}
+          emissiveIntensity={hovered ? 0.5 : (isSpecial ? 0.8 : 0.1)} 
+        />
+      </mesh>
 
-
+      {/* Görsel Seçim Çerçevesi (Opsiyonel ama kararlılık sağlar) */}
+      
         <lineSegments rotation={[Math.PI, 0, 0]}>
-          <edgesGeometry args={[new THREE.CylinderGeometry(1, 1, height, 6), 1]} />
-          <lineBasicMaterial color="#251e2d" linewidth={2} />
+          <edgesGeometry args={[new THREE.CylinderGeometry(1, 1, height + 0.1, 6)]} />
+          <lineBasicMaterial color="#74746f" transparent opacity={0.5} linewidth={0.1} />
         </lineSegments>
-      </group>
-    </>
+     
 
-
-
-  )
+      {/* Işıklar */}
+      {isSpecial && (
+        <pointLight position={[0, height / 2 + 0.5, 0]} intensity={hovered ? 3 : 1.5} color={baseColor} />
+      )}
+    </group>
+  );
 }
-
 // Hareket Eden Küp (Birim)
 function Unit({ unitRef }) {
   return (
@@ -99,13 +136,7 @@ export default function GameMap() {
   const unitRef = useRef()
   const [mapData, setMapData] = useState([])
 
-  // --- YENİ: Kart Verileri ---
-  const [hand, setHand] = useState([
-    { id: 1, title: 'Hücum', type: 'Saldırı', cost: 1, desc: 'Rastgele bir düşmana vur.', img: '/assets/card/card-attack.png' },
-    { id: 2, title: 'Savunma', type: 'Defans', cost: 1, desc: '5 Zırh kazan.', img: '/assets/card/card-defence.png' },
-    { id: 3, title: 'Işınlan', type: 'Büyü', cost: 2, desc: 'Rastgele bir kareye git.', img: '/assets/card/card-magic2.png' },
-    { id: 4, title: 'Vergi', type: 'Eşya', cost: 0, desc: '10 altın kazan.', img: '/assets/card/card-gold.png' },
-  ]);
+
 
   // Harita verisini bir kez oluştur
   const hexSize = 1;
@@ -114,52 +145,58 @@ export default function GameMap() {
 
   const cells = useMemo(() => {
     const temp = [];
-    const mapRadius = 6; // 12'den 18'e çıkış farkı yaklaşık bu çapı verir
-    const centerRow = 6; // 0'dan 12'ye giden sistemde orta nokta
+    const mapRadius = 6;
+    const centerRow = 6;
 
-    // r: satır (0'dan 12'ye, toplam 13 satır)
     for (let r = 0; r <= 12; r++) {
-      // r=0 (en üst) için 12 hücre, r=6 (orta) için 18 hücre olması için:
-      // Her satırın genişliğini ve o satırın başlaması gereken ofseti hesaplıyoruz
       const rowWidth = 18 - Math.abs(centerRow - r);
-      const startCol = Math.max(0, centerRow - r) / 2; // Görsel denge için kaydırma
-
       for (let c = 0; c < rowWidth; c++) {
-        // Standart 6gen dizilim matematiği
-        // (c + Math.abs(r - centerRow) / 2) kısmı haritayı merkeze toplar
         const x = (c + Math.abs(r - centerRow) / 2) * xSpacing;
         const z = r * zSpacing;
 
-        let height = Math.random() > 0.7 ? 1 : 0.5;
-        let p = height === 1 ? 'mountain-tile.png' : 'grass-tile.png';
-        let cc = height === 1 ? '#9b89b3' : '#00c9a7';
+        let height = Math.random() > 0.7 ? (1+Math.random()) : 0.6; // Dağlar biraz daha yüksek
+        let type = 'normal';
 
-        if ((c == 0 && r == 0) || (c == rowWidth - 1 && r == 12) || (c == 0 && r == 12) || (c == rowWidth - 1 && r == 0) || (c == 0 && r == 6) || (c >= rowWidth - 1 && r == 6)) {
-          cc = '#ff5f5f';
-          height = 1.3;
+        // KONSEPT RENKLERİ
+        // Çimen: Koyu orman yeşili/zeytin tonları
+        // Dağ: Koyu taş grisi/kahve
+        // Kenarlar/Kaleler: Altın/Bronz vurgular
+        let cc = height > 1 ? '#7f550d' : '#274619';
+
+        // Köşe ve Stratejik Noktalar (Kırmızıyı "Kraliyet Kırmızısı"na çekiyoruz)
+        if ((c === 0 && r === 0) || (c === rowWidth - 1 && r === 12) ||
+          (c === 0 && r === 12) || (c === rowWidth - 1 && r === 0) ||
+          (c === 0 && r === 6) || (c >= rowWidth - 1 && r === 6)) {
+          cc = '#8b0000'; // Koyu Bordo (Kraliyet kırmızısı)
+          height = 1.5;
+          type = 'stronghold';
         }
-        if (Math.random() > 0.95) cc = 'gold';
 
-        if (Math.random() > 0.95) cc = '#0c6c85';
+        // Altın Madeni
+        const rand = Math.random();
+        if (rand > 0.95) { 
+          cc = '#d4af37'; // HUD'daki Altın Rengi
+          type = 'gold';
+        } else if (rand > 0.92) {
+          cc = '#236cb6'; // Safir Mavisi (Su veya Mana kaynağı)
+          type = 'mana';
+          height = height-rand;
+        }
 
         temp.push({
           id: `hex-${r}-${c}`,
           position: [x, 0, z],
-          tex: '/assets/tile/' + p,
           height: height,
           color: cc,
-          emissive: cc, // Parıltı efekti için
-          emissiveIntensity: 0.2,
-          type: cc === 'gold' ? 'gold' : 'normal'
+          emissive: cc,
+          emissiveIntensity: type === 'gold' || type === 'stronghold' ? 0.4 : 0.1,
+          type: type
         });
-
-
       }
     }
-
-    setMapData(temp);
     return temp;
   }, [xSpacing, zSpacing]);
+
 
   const center = useMemo(() => {
     if (cells.length === 0) return [0, 0, 0];
@@ -172,6 +209,7 @@ export default function GameMap() {
 
     return [centerX, 0, centerZ];
   }, [cells]);
+
   // Rastgele Hücreye Gitme Fonksiyonu
   const moveUnit = () => {
     if (mapData.length === 0) return;
@@ -195,112 +233,9 @@ export default function GameMap() {
   };
 
 
-  // --- Tasarım Objeleri ---
-  const handContainerStyle = {
-    position: 'absolute',
-    bottom: '0',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    zIndex: 1000,
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    paddingBottom: '20px',
-    pointerEvents: 'none' // Arkadaki canvasa tıklamayı engellememesi için (kartlar hariç)
-  };
-
-  const cardsWrapperStyle = {
-    display: 'flex',
-    gap: '10px',
-    pointerEvents: 'auto'
-  };
-
-  const cardStyle = {
-    width: '180px', // Biraz daha genişleterek Slay the Spire oranına yaklaştırdık
-    height: '260px',
-    borderRadius: '12px',
-    color: 'white',
-    position: 'relative',
-    userSelect: 'none',
-    boxShadow: '0 8px 20px rgba(0,0,0,0.5)',
-    cursor: 'pointer',
-    overflow: 'hidden', // Resmin dışarı taşmasını engeller
-
-    // Resim Ayarları
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-
-    transition: 'transform 0.2s ease-out',
-  };
-
-  const costCircleStyle = {
-    position: 'absolute',
-
-    width: '30px',
-    height: '30px',
-    background: '#3498db',
-    borderRadius: '50%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontWeight: 'bold',
-    border: '2px solid white'
-  };
-
   const buttonStyle = {
     padding: '12px 24px', fontSize: '18px', cursor: 'pointer',
     backgroundColor: '#ff4757', color: 'white', border: 'none', borderRadius: '8px'
-  };
-
-  const overlayStyle = {
-    height: '100%',
-    width: '100%',
-    borderRadius: '10px',
-    padding: '10px',
-    display: 'flex',
-    flexDirection: 'column',
-    boxSizing: 'border-box'
-  };
-
-  const titleStyle = {
-    margin: '45px 0 5px 0',
-    fontSize: '1.5rem',
-    textShadow: '2px 2px 4px rgba(0,0,0,1)', // Metni öne çıkarır
-    textAlign: 'center'
-  };
-
-  const descStyle = {
-    marginTop: '10px',
-    marginLeft: '30px',
-    width: '50%',
-    padding: '8px',
-    fontSize: '13px',
-    color: '#ffffff',
-    textAlign: 'center',
-    fontWeight: '500',
-
-    // --- Holo & Okunabilirlik Ayarları ---
-    borderRadius: '6px',
-    // Yarı şeffaf koyu zemin (metni okutur) + Holo renk geçişi
-    background: 'linear-gradient(135deg, rgba(30,30,30,0.85) 0%, rgba(60,60,80,0.85) 25%, rgba(100,100,150,0.6) 50%, rgba(60,60,80,0.85) 75%, rgba(30,30,30,0.85) 100%)',
-    backgroundSize: '400% 400%',
-    animation: 'holo-shine 5s ease infinite',
-
-    // Cam efekti
-    backdropFilter: 'blur(3px)',
-    border: '1px solid rgba(255, 255, 255, 0.2)',
-    boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
-
-    textShadow: '1px 1px 2px rgba(0,0,0,1)' // Metin gölgesi
-  };
-
-  const typeStyle =
-  {
-    fontSize: '1rem',
-    marginTop: '42px',
-    marginLeft: '34px',
-    fontWeight: 'bold'
   };
 
   return (
@@ -315,28 +250,46 @@ export default function GameMap() {
 
       <TopBar></TopBar>
       <TurnControl></TurnControl>
-<PlayerList></PlayerList>
-      <Canvas camera={{ position: [10, 10, 40], fov: 60, far: 1000 }}>
-        <color attach="background" args={['#a2d2ff']} />
-        {/* <fog attach="fog" args={['#f0f0f0', 10, 50]} /> */}
-        <ambientLight intensity={1} />
-        <Sky sunPosition={[100, 20, 100]} distance={450000} />
-        {/* Haritayı Çiz */}
+      <PlayerList></PlayerList>
+      <Canvas shadows 
+      camera={{ position: [10, 10, 40], fov: 60, far: 1000 }}
+      raycaster={{ params: { Line: { threshold: 0.15 } } }}>
+        {/* Arka planı HUD ile uyumlu çok koyu lacivert/siyah yapıyoruz */}
+        <color attach="background" args={['#050505']} />
+
+        <ambientLight intensity={0.4} /> {/* Genel aydınlatmayı biraz kıstık ki parlamalar belli olsun */}
+
+        {/* Işığın açısını ve gücünü artırarak siyahlığı engelliyoruz */}
+        <directionalLight
+          position={[20, 50, 20]}
+          intensity={1.5}
+          castShadow
+          shadow-mapSize={[2048, 2048]}
+        />
+
+        {/* Gökyüzünü daha dramatik, akşamüstü/gece moduna alıyoruz */}
+        <Sky sunPosition={[-100, 10, -100]} distance={450000} inclination={0.6} azimuth={0.1} />
+
         {cells.map((cell) => (
-          <Hexagon type={cell.type} key={cell.id} position={cell.position} texturePath={cell.tex} height={cell.height} color={cell.color} emissive={cell.color} emissiveIntensity={cell.emissiveIntensity} />
+          <Hexagon
+            key={cell.id}
+            type={cell.type}
+            position={cell.position}
+            texturePath={cell.tex}
+            height={cell.height}
+            color={cell.color}
+            emissiveIntensity={cell.emissiveIntensity}
+          />
         ))}
-        {/* Birimi Çiz */}
+
         <Unit unitRef={unitRef} />
-        <OrbitControls target={center}
+        <OrbitControls
+          target={center}
           makeDefault
           enablePan={false}
-          // Kameranın yerin altına inmesini engeller (90 derece sınırı)
           maxPolarAngle={Math.PI / 2.1}
-          // Kameranın çok fazla uzaklaşıp kaybolmasını engeller
           maxDistance={50}
-          // Çok fazla yaklaşıp hücrelerin içine girmesini engeller
           minDistance={5}
-
         />
       </Canvas>
 

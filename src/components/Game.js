@@ -17,14 +17,14 @@ export default function Game() {
 
   return (
     <>
-     <GameMap />
-     {/*   {isMainMenuScreen && <MainMenu />}
+     
+     {/* <GameMap /> */}
+
+      {isMainMenuScreen && <MainMenu />}
       {isHostScreen && <HostScreen />}
       {isClientScreen && <ClientScreen />}
       {isLobyScreen && <LobbyScreen />}
-      {isMapScreen && <GameMap />*/}
-
-     
+      {isMapScreen && <GameMap />}
     </>
   );
 }
