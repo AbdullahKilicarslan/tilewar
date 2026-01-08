@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Library, History, Swords, Flame, Castle } from 'lucide-react';
-import './css/GameHUD.css';
+import './css/BottomBar.css';
 import Card from './Card';
 
-const GameHUD = () => {
+const BottomBar = () => {
   const [showDeck, setShowDeck] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
 
@@ -28,21 +28,21 @@ const GameHUD = () => {
 
   return (
     <div className="hud-bottom-bar">
-      
-      {/* SOL: Kalan Deste */}
+
+     {/* SOL: Kalan Deste Konteynırı */}
       <div 
         className="hud-icon-container"
+        data-label="DESTE"
         onMouseEnter={() => setShowDeck(true)}
         onMouseLeave={() => setShowDeck(false)}
       >
-        <Library size={48} />
+        <Library size={36} />
         {showDeck && (
           <div className="preview-panel left-preview">
             <h4>KALAN ORDU</h4>
             <ul>
-              {deckPreview.map((item, i) => (
-                <li key={i}><span>{item.name}</span> <span>x{item.count}</span></li>
-              ))}
+              <li><span>Mızrakçı</span> <span>x2</span></li>
+              <li><span>Şifa</span> <span>x1</span></li>
             </ul>
           </div>
         )}
@@ -51,24 +51,23 @@ const GameHUD = () => {
       {/* ORTA: Elindeki Kartlar */}
       <div className="hand-container">
         {hand.map((card) => (
-         <Card card={card} />
+          <Card card={card} />
         ))}
       </div>
 
-      {/* SAĞ: Kullanılan Kartlar */}
+     {/* SAĞ: Kullanılan Kartlar Konteynırı */}
       <div 
         className="hud-icon-container"
+        data-label="GEÇMİŞ"
         onMouseEnter={() => setShowHistory(true)}
         onMouseLeave={() => setShowHistory(false)}
       >
-        <History size={48} />
+        <History size={36} />
         {showHistory && (
           <div className="preview-panel right-preview">
             <h4>GEÇMİŞ HAMLELER</h4>
             <ul>
-              {historyPreview.map((item, i) => (
-                <li key={i}><span>{item.name}</span> <small>{item.turn}</small></li>
-              ))}
+              <li><span>Okçu Atışı</span> <span style={{fontSize:'0.7rem'}}>T3</span></li>
             </ul>
           </div>
         )}
@@ -78,4 +77,4 @@ const GameHUD = () => {
   );
 };
 
-export default GameHUD;
+export default BottomBar;

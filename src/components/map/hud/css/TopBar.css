@@ -1,0 +1,94 @@
+/* TopBar.css */
+
+.top-bar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background: linear-gradient(180deg, rgba(20, 15, 10, 0.95) 0%, rgba(43, 24, 16, 0.7) 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  border-bottom: 2px solid #d4af37;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+}
+
+.resources-wrapper {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+}
+
+.resource-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 15px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+/* Simgelerin siyah kalmasını engellemek için */
+.resource-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Simgeler artık kendi renklerinde parlayacak */
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+.resource-info-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.resource-label {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  color: #f2e3bc; /* Parşömen rengi etiket */
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.total-value {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 1.2rem;
+  color: #ffffff;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px #000;
+}
+
+.income-value {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.income-value.positive { color: #4caf50; }
+.income-value.negative { color: #f44336; }
+
+/* Kaynaklara Özel Renkler */
+.gold-res { color: #ffd700; border-color: rgba(255, 215, 0, 0.3); }
+.food-res { color: #ff7f50; border-color: rgba(255, 127, 80, 0.3); }
+.work-res { color: #00d4ff; border-color: rgba(0, 212, 255, 0.3); }
+.sold-res { color: #ff4444; border-color: rgba(255, 68, 68, 0.3); }
+.tech-res { color: #da70d6; border-color: rgba(218, 112, 214, 0.3); }
+
+/* Tur ve Oyuncu Bilgisi */
+.side-info {
+  position: absolute;
+  font-family: 'Cinzel Decorative', serif;
+}
+.player-name { left: 40px; color: #d4af37; font-size: 1rem; }
+.turn-box { right: 40px; text-align: center; color: #fff; border-left: 1px solid #d4af37; padding-left: 20px; }

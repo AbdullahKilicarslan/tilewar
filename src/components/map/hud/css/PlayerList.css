@@ -1,0 +1,104 @@
+/* PlayerList.css */
+
+.player-list-wrapper {
+  position: fixed;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%); /* Dikeyde tam ortalar */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 1200;
+  pointer-events: none;
+}
+
+.player-list-wrapper > * {
+  pointer-events: auto;
+}
+
+/* Oyuncu Kartı */
+.player-list-item {
+  width: 180px;
+  background: rgba(26, 15, 10, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 0 15px 15px 0; /* Sağ köşeler oval */
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  left: -10px; /* Normalde biraz içeride dursun */
+}
+
+/* Aktif Oyuncu Efekti */
+.player-list-item.active {
+  left: 0; /* Dışarı fırlar */
+  width: 200px;
+  background: rgba(43, 24, 16, 0.95);
+  border-color: var(--gold);
+  border-width: 2px;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+
+/* Aktiflik Belirteci (Parlayan Nokta) */
+.active-indicator {
+  position: absolute;
+  left: -5px;
+  width: 10px;
+  height: 10px;
+  background: var(--gold);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--gold);
+  display: none;
+}
+
+.player-list-item.active .active-indicator {
+  display: block;
+}
+
+/* Profil İkonu / Avatar alanı */
+.player-avatar {
+  width: 35px;
+  height: 35px;
+  background: #1a0f0a;
+  border: 1px solid rgba(212, 175, 55, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+}
+
+.player-list-item.active .player-avatar {
+  background: var(--gold);
+  color: #1a0f0a;
+}
+
+/* Oyuncu Bilgileri */
+.player-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.p-name {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 0.9rem;
+  color: #f2e3bc;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.player-list-item.active .p-name {
+  color: #fff;
+  font-weight: bold;
+}
+
+.p-status {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 0.6rem;
+  color: rgba(212, 175, 55, 0.7);
+  letter-spacing: 1px;
+}

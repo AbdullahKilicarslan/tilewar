@@ -7,7 +7,10 @@ import * as THREE from 'three'
 
 import { useAppContext } from '../../contexts/AppContext';
 import { CoinPouch } from '../model/coinpouch';
-import GameHUD from './hud/GameHUD'
+import BottomBar from './hud/BottomBar'
+import TopBar from './hud/TopBar'
+import TurnControl from './hud/TurnControl'
+import PlayerList from './hud/PlayerList'
 
 
 // Altıgen Bileşeni (Görsel Harita)
@@ -45,7 +48,7 @@ function Hexagon({ position, color, height, emissiveIntensity, type }) {
   return (
     <>
       {type === 'gold' &&
-        <CoinPouch position={[position[0],position[1]+1,position[2]]} scale={0.2} speed={2} />
+        <CoinPouch position={[position[0], position[1] + 1, position[2]]} scale={0.2} speed={2} />
       }
       <group position={position}>
 
@@ -78,7 +81,7 @@ function Unit({ unitRef }) {
     </mesh>
   )
 }
- 
+
 export default function GameMap() {
 
   const { data, trigger } = useAppContext();
@@ -158,17 +161,17 @@ export default function GameMap() {
     return temp;
   }, [xSpacing, zSpacing]);
 
-const center = useMemo(() => {
-  if (cells.length === 0) return [0, 0, 0];
-  
-  const xs = cells.map(c => c.position[0]);
-  const zs = cells.map(c => c.position[2]);
-  
-  const centerX = (Math.min(...xs) + Math.max(...xs)) / 2;
-  const centerZ = (Math.min(...zs) + Math.max(...zs)) / 2;
-  
-  return [centerX, 0, centerZ];
-}, [cells]);
+  const center = useMemo(() => {
+    if (cells.length === 0) return [0, 0, 0];
+
+    const xs = cells.map(c => c.position[0]);
+    const zs = cells.map(c => c.position[2]);
+
+    const centerX = (Math.min(...xs) + Math.max(...xs)) / 2;
+    const centerZ = (Math.min(...zs) + Math.max(...zs)) / 2;
+
+    return [centerX, 0, centerZ];
+  }, [cells]);
   // Rastgele Hücreye Gitme Fonksiyonu
   const moveUnit = () => {
     if (mapData.length === 0) return;
@@ -304,16 +307,16 @@ const center = useMemo(() => {
     <div style={{ width: '100vw', height: '100vh', overflow: 'hidden', position: 'relative' }}>
 
       {/* Üst Arayüz (Enerji Barı vb.) */}
-      <div style={{ position: 'absolute', top: '20px', left: '20px', zIndex: 100, display: 'flex', gap: '10px' }}>
+      <div style={{ position: 'absolute', top: '160px', left: '20px', zIndex: 100, display: 'flex', gap: '10px' }}>
         <button onClick={moveUnit} style={buttonStyle}>Zar At</button>
       </div>
 
 
-     
 
-
-
-      <Canvas camera={{ position: [10, 10, 40], fov: 60,  far: 1000 }}>
+      <TopBar></TopBar>
+      <TurnControl></TurnControl>
+<PlayerList></PlayerList>
+      <Canvas camera={{ position: [10, 10, 40], fov: 60, far: 1000 }}>
         <color attach="background" args={['#a2d2ff']} />
         {/* <fog attach="fog" args={['#f0f0f0', 10, 50]} /> */}
         <ambientLight intensity={1} />
@@ -322,22 +325,22 @@ const center = useMemo(() => {
         {cells.map((cell) => (
           <Hexagon type={cell.type} key={cell.id} position={cell.position} texturePath={cell.tex} height={cell.height} color={cell.color} emissive={cell.color} emissiveIntensity={cell.emissiveIntensity} />
         ))}
-       {/* Birimi Çiz */}
+        {/* Birimi Çiz */}
         <Unit unitRef={unitRef} />
         <OrbitControls target={center}
-        makeDefault 
-        enablePan={false}
-  // Kameranın yerin altına inmesini engeller (90 derece sınırı)
-  maxPolarAngle={Math.PI / 2.1} 
-  // Kameranın çok fazla uzaklaşıp kaybolmasını engeller
-  maxDistance={50}
-  // Çok fazla yaklaşıp hücrelerin içine girmesini engeller
-  minDistance={5}
-        
+          makeDefault
+          enablePan={false}
+          // Kameranın yerin altına inmesini engeller (90 derece sınırı)
+          maxPolarAngle={Math.PI / 2.1}
+          // Kameranın çok fazla uzaklaşıp kaybolmasını engeller
+          maxDistance={50}
+          // Çok fazla yaklaşıp hücrelerin içine girmesini engeller
+          minDistance={5}
+
         />
       </Canvas>
 
-      <GameHUD></GameHUD>
+      <BottomBar></BottomBar>
     </div>
   )
 }

@@ -1,0 +1,146 @@
+/* TurnControl.css */
+
+.turn-control-wrapper {
+  position: fixed;
+  right: 40px;
+  bottom: 220px; /* Kart barının hemen üzerinde */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 15px;
+  z-index: 1500;
+}
+
+/* Aksiyon Puanları Paneli */
+.action-points-panel {
+  background: rgba(26, 15, 10, 0.85);
+  border: 2px solid #d4af37;
+  padding: 10px 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  backdrop-filter: blur(5px);
+}
+
+.ap-label {
+  font-family: 'Cinzel Decorative', serif;
+  color: #d4af37;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+}
+
+.ap-display {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.ap-orb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #00d4ff;
+  box-shadow: 0 0 10px #00d4ff, inset 0 0 5px white;
+  transition: all 0.3s ease;
+}
+
+.ap-orb.spent {
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.ap-text {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 1.5rem;
+  color: #fff;
+  margin-left: 10px;
+}
+
+/* Turu Bitir Butonu */
+.end-turn-btn {
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, #8b0000 0%, #4a0000 100%);
+  border: 4px double #d4af37;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Cinzel Decorative', serif;
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+  position: relative;
+  overflow: hidden;
+}
+
+.end-turn-btn:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 0 30px rgba(139, 0, 0, 0.8);
+}
+
+.end-turn-btn:active {
+  transform: scale(0.9);
+  background: #2b0000;
+}
+
+.end-turn-btn::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: url('https://www.transparenttextures.com/patterns/natural-paper.png');
+  opacity: 0.3;
+}
+
+.turn-info-badge {
+  background: #d4af37;
+  color: #1a0f0a;
+  padding: 2px 10px;
+  font-size: 0.7rem;
+  border-radius: 4px;
+  position: absolute;
+  top: -10px;
+}
+
+
+/* Kullanıcı Adı Etiketi */
+.active-user-badge {
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.9), transparent);
+  padding: 5px 30px;
+  margin-bottom: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.user-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 0.6rem;
+  color: #1a0f0a;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.user-name {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 1.1rem;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  font-weight: bold;
+}
+
+/* AP Paneli Altına Boşluk */
+.action-points-panel {
+  margin-bottom: 10px;
+}
