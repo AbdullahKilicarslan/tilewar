@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from 'react';
-import HexMap from './sub/HexMap'; // HexMap.js dosyasının aynı klasörde olduğunu varsayıyoruz
+import GameMap from './map/GameMap'; // HexMap.js dosyasının aynı klasörde olduğunu varsayıyoruz
 //import MainHub from './hub/MainHub'; // HexMap.js dosyasının aynı klasörde olduğunu varsayıyoruz
 
 import MainMenu from './screens/FirstScreen'; // HexMap.js dosyasının aynı klasörde olduğunu varsayıyoruz
@@ -17,15 +17,14 @@ export default function Game() {
 
   return (
     <>
-      {isMainMenuScreen && <MainMenu />}
+     <GameMap />
+     {/*   {isMainMenuScreen && <MainMenu />}
       {isHostScreen && <HostScreen />}
       {isClientScreen && <ClientScreen />}
       {isLobyScreen && <LobbyScreen />}
-      {isMapScreen && <HexMap />}
+      {isMapScreen && <GameMap />*/}
 
-      {/* {gameScreen ?
-        <HexMap />
-        :  <PeerJSChat />} */}
+     
     </>
   );
 }

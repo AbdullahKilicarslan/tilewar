@@ -7,6 +7,7 @@ import * as THREE from 'three'
 
 import { useAppContext } from '../../contexts/AppContext';
 import { CoinPouch } from '../model/coinpouch';
+import GameHUD from './hud/GameHUD'
 
 
 // Altıgen Bileşeni (Görsel Harita)
@@ -78,7 +79,7 @@ function Unit({ unitRef }) {
   )
 }
  
-export default function HexMap() {
+export default function GameMap() {
 
   const { data, trigger } = useAppContext();
 
@@ -308,37 +309,7 @@ const center = useMemo(() => {
       </div>
 
 
-      {/* --- YENİ: Alt Kart Alanı --- */}
-      <div className="hand-container" style={handContainerStyle}>
-        <div style={cardsWrapperStyle}>
-          {hand.map((card, index) => (
-            <div
-              key={card.id}
-              className="card"
-              style={{
-                ...cardStyle,
-                backgroundImage: `url(${card.img})`,
-                border: card.type === 'Saldırı' ? '2px solid #ff4757' : '2px solid #8e44ad' // Tipine göre çerçeve rengi
-              }}
-              onClick={() => {
-                if (card.id === 3) moveUnit(); // Işınlan kartı örneği
-                // Kartı elden çıkar (opsiyonel)
-                // setHand(prev => prev.filter(c => c.id !== card.id));
-              }}
-            >
-
-              <div style={overlayStyle}>
-                <div style={costCircleStyle}>{card.cost}</div>
-                <h4 style={titleStyle}>{card.title}</h4>
-                <div className="card-description" style={descStyle}>  {card.desc}</div>
-
-              </div>
-
-
-            </div>
-          ))}
-        </div>
-      </div>
+     
 
 
 
@@ -365,6 +336,8 @@ const center = useMemo(() => {
         
         />
       </Canvas>
+
+      <GameHUD></GameHUD>
     </div>
   )
 }
