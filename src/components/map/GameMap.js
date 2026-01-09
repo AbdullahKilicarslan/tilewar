@@ -11,6 +11,8 @@ import BottomBar from './hud/BottomBar'
 import TopBar from './hud/TopBar'
 import TurnControl from './hud/TurnControl'
 import PlayerList from './hud/PlayerList'
+import RecruitmentPanel from './hud/RecruitmentPanel'
+
 import { Castle } from './../model/castle';
 
 
@@ -40,7 +42,7 @@ function HexagonTexture({ position, texturePath, height }) {
 
 function Hexagon({ position, color, height, emissiveIntensity, type }) {
   const [hovered, setHovered] = React.useState(false);
-  
+
   const baseColor = color === 'gold' ? '#d4af37' : color;
   const isSpecial = type === 'gold' || type === 'stronghold';
 
@@ -48,23 +50,23 @@ function Hexagon({ position, color, height, emissiveIntensity, type }) {
     <group position={position}>
       {/* Altın kesesi varsa, etkileşimi engellememesi için mesh dışında tutuyoruz */}
       {type === 'gold' && (
-        <CoinPouch 
-          position={[0, height / 2 + 0.5, 0]} 
-          scale={0.2} 
-          speed={2} 
+        <CoinPouch
+          position={[0, height / 2 + 0.5, 0]}
+          scale={0.2}
+          speed={2}
         />
       )}
-      
-       {type === 'stronghold' && (
-        <Castle 
-          position={[0, height / 2 , 0]} 
-          scale={0.7} 
-          speed={2} 
+
+      {type === 'stronghold' && (
+        <Castle
+          position={[0, height / 2, 0]}
+          scale={0.7}
+          speed={2}
         />
       )}
-      <mesh 
-        rotation={[Math.PI, 0, 0]} 
-        castShadow 
+      <mesh
+        rotation={[Math.PI, 0, 0]}
+        castShadow
         receiveShadow
         // Hover olaylarını mesh üzerine aldık
         onPointerEnter={(e) => {
@@ -76,31 +78,31 @@ function Hexagon({ position, color, height, emissiveIntensity, type }) {
         }}
       >
         <cylinderGeometry args={[1, 1, height, 6]} />
-        
+
         {/* Yanlar */}
         <meshStandardMaterial attach="material-0" color={baseColor} metalness={0.5} roughness={0.7} />
-        
+
         {/* Alt */}
         <meshStandardMaterial attach="material-1" color="#050505" />
 
         {/* ÜST KAPAK - Hover burada işlenir */}
-        <meshStandardMaterial 
-          attach="material-2" 
-          color={hovered ? "#ffffff" : baseColor} 
-          metalness={isSpecial ? 1 : 0.3} 
+        <meshStandardMaterial
+          attach="material-2"
+          color={hovered ? "#ffffff" : baseColor}
+          metalness={isSpecial ? 1 : 0.3}
           roughness={isSpecial ? 0.1 : 0.4}
           emissive={hovered ? "#ffffff" : baseColor}
-          emissiveIntensity={hovered ? 0.5 : (isSpecial ? 0.8 : 0.1)} 
+          emissiveIntensity={hovered ? 0.5 : (isSpecial ? 0.8 : 0.1)}
         />
       </mesh>
 
       {/* Görsel Seçim Çerçevesi (Opsiyonel ama kararlılık sağlar) */}
-      
-        <lineSegments rotation={[Math.PI, 0, 0]}>
-          <edgesGeometry args={[new THREE.CylinderGeometry(1, 1, height + 0.1, 6)]} />
-          <lineBasicMaterial color="#74746f" transparent opacity={0.5} linewidth={0.1} />
-        </lineSegments>
-     
+
+      <lineSegments rotation={[Math.PI, 0, 0]}>
+        <edgesGeometry args={[new THREE.CylinderGeometry(1, 1, height + 0.1, 6)]} />
+        <lineBasicMaterial color="#74746f" transparent opacity={0.5} linewidth={0.1} />
+      </lineSegments>
+
 
       {/* Işıklar */}
       {isSpecial && (
@@ -122,7 +124,23 @@ function Unit({ unitRef }) {
 export default function GameMap() {
 
   const { data, trigger } = useAppContext();
+  // Yardımcı fonksiyon: Rengi rastgele küçük bir oranda değiştirir
+  const getVariantColor = (hex, amount = 10) => {
+    // HEX'i RGB'ye çevir
+    let r = parseInt(hex.substring(1, 3), 16);
+    let g = parseInt(hex.substring(3, 5), 16);
+    let b = parseInt(hex.substring(5, 7), 16);
 
+    // Rastgele bir sapma ekle (-amount ile +amount arası)
+    const offset = () => Math.floor(Math.random() * amount * 2) - amount;
+
+    r = Math.min(255, Math.max(0, r + offset()));
+    g = Math.min(255, Math.max(0, g + offset()));
+    b = Math.min(255, Math.max(0, b + offset()));
+
+    // Tekrar HEX'e çevir
+    return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+  };
   const myFunction = () => {
     console.log('Component2 fonksiyonu çalıştı!');
     // moveUnit();
@@ -154,7 +172,7 @@ export default function GameMap() {
         const x = (c + Math.abs(r - centerRow) / 2) * xSpacing;
         const z = r * zSpacing;
 
-        let height = Math.random() > 0.7 ? (1+Math.random()) : 0.6; // Dağlar biraz daha yüksek
+        let height = Math.random() > 0.7 ? (1 + Math.random()) : 0.6; // Dağlar biraz daha yüksek
         let type = 'normal';
 
         // KONSEPT RENKLERİ
@@ -162,7 +180,7 @@ export default function GameMap() {
         // Dağ: Koyu taş grisi/kahve
         // Kenarlar/Kaleler: Altın/Bronz vurgular
         let cc = height > 1 ? '#7f550d' : '#274619';
-
+         cc = getVariantColor(cc, 15);
         // Köşe ve Stratejik Noktalar (Kırmızıyı "Kraliyet Kırmızısı"na çekiyoruz)
         if ((c === 0 && r === 0) || (c === rowWidth - 1 && r === 12) ||
           (c === 0 && r === 12) || (c === rowWidth - 1 && r === 0) ||
@@ -174,13 +192,13 @@ export default function GameMap() {
 
         // Altın Madeni
         const rand = Math.random();
-        if (rand > 0.95) { 
+        if (rand > 0.95) {
           cc = '#d4af37'; // HUD'daki Altın Rengi
           type = 'gold';
         } else if (rand > 0.92) {
           cc = '#236cb6'; // Safir Mavisi (Su veya Mana kaynağı)
           type = 'mana';
-          height = height-rand;
+          height = height - rand;
         }
 
         temp.push({
@@ -251,9 +269,10 @@ export default function GameMap() {
       <TopBar></TopBar>
       <TurnControl></TurnControl>
       <PlayerList></PlayerList>
-      <Canvas shadows 
-      camera={{ position: [10, 10, 40], fov: 60, far: 1000 }}
-      raycaster={{ params: { Line: { threshold: 0.15 } } }}>
+      <RecruitmentPanel></RecruitmentPanel>
+      <Canvas shadows
+        camera={{ position: [10, 10, 40], fov: 60, far: 1000 }}
+        raycaster={{ params: { Line: { threshold: 0.15 } } }}>
         {/* Arka planı HUD ile uyumlu çok koyu lacivert/siyah yapıyoruz */}
         <color attach="background" args={['#050505']} />
 

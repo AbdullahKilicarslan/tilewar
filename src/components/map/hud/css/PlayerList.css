@@ -2,8 +2,8 @@
 
 .player-list-wrapper {
   position: fixed;
-  left: 20px;
-  top: 50%;
+  right: 20px;
+  top: 200px;
   transform: translateY(-50%); /* Dikeyde tam ortalar */
   display: flex;
   flex-direction: column;
@@ -22,7 +22,7 @@
   background: rgba(26, 15, 10, 0.8);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(212, 175, 55, 0.3);
-  border-radius: 0 15px 15px 0; /* Sağ köşeler oval */
+  border-radius: 15px 15px 15px 15px; /* Sağ köşeler oval */
   padding: 10px 15px;
   display: flex;
   align-items: center;

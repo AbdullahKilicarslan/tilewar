@@ -1,0 +1,125 @@
+/* RecruitmentPanel.css */
+
+.recruitment-panel {
+  position: fixed;
+  left: 20px;
+  top: 100px;
+  width: 320px;
+  background: rgba(15, 10, 5, 0.95);
+  backdrop-filter: blur(15px);
+  border: 2px solid #d4af37;
+  border-radius: 12px;
+  padding: 18px;
+  z-index: 1200;
+  box-shadow: 0 10px 50px rgba(0,0,0,0.9);
+  /* Tüm paneli genel olarak sola hizalı başlatıyoruz */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; 
+}
+
+/* BAŞLIKLAR (MEVCUT BİRLİKLER / YÖNETİM) */
+.panel-section-title {
+  width: 100%;
+  font-family: 'Cinzel Decorative', serif;
+  color: #d4af37 !important; /* KESİN ALTIN RENGİ */
+  font-size: 0.9rem;
+  text-align: left; /* SOLA YASLA */
+  border-bottom: 1px solid rgba(212, 175, 55, 0.4);
+  padding-bottom: 5px;
+  margin-top: 20px;
+  margin-bottom: 15px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.panel-section-title:first-child {
+  margin-top: 0;
+}
+
+/* BUTONLAR */
+.recruit-btn-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.recruit-button {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+/* SOL TARAF (İkon ve Yazı) */
+.btn-main-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-main-info svg {
+  color: #d4af37 !important;
+}
+
+.btn-label {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 1rem;
+  color: #f2e3bc !important; /* PARŞÖMEN BEYAZI */
+  font-weight: bold;
+}
+
+/* SAĞ TARAF (Maliyetler) */
+.cost-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.cost-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.cost-gold { color: #ffd700 !important; }
+.cost-tech { color: #da70d6 !important; }
+.cost-ap { color: #00e5ff !important; }
+
+/* BİRLİK LİSTESİ */
+.unit-list {
+  width: 100%;
+}
+
+.unit-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  border-left: 3px solid #d4af37;
+}
+
+.unit-info .name {
+  color: #ffffff !important; /* BEYAZ */
+  font-size: 0.85rem;
+  font-weight: bold;
+  display: block;
+}
+
+.unit-info .count {
+  color: #d4af37 !important; /* ALTIN */
+  font-size: 0.75rem;
+}
