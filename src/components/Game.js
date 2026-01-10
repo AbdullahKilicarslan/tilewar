@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 import GameMap from './map/GameMap'; // HexMap.js dosyasının aynı klasörde olduğunu varsayıyoruz
 //import MainHub from './hub/MainHub'; // HexMap.js dosyasının aynı klasörde olduğunu varsayıyoruz
 
@@ -8,13 +8,45 @@ import LobbyScreen from './screens/LobbyScreen'; // HexMap.js dosyasının aynı
 import ClientScreen from './screens/ClientScreen'; // HexMap.js dosyasının aynı klasörde olduğunu varsayıyoruz
 
 import { useAppContext } from '../contexts/AppContext';
+import { useGameContext } from '../contexts/GameContext';
 import { useScreenContext } from '../contexts/ScreenContext';
 
 
 export default function Game() {
   const { gameScreen } = useAppContext();
   const { isMainMenuScreen, isHostScreen, isLobyScreen, isMapScreen, isClientScreen } = useScreenContext();
-  const isDev = false
+  const { StartGame } = useGameContext();
+  const isDev = true
+
+
+  useEffect(() => {
+    if (!isDev) return;
+    StartGame([{
+      id: 'host',
+      name: 'Veriziazam İsmail',
+      deck: 'deste',
+      ready: true,
+      color: 'renk'
+    }, {
+      id: 'host2',
+      name: 'Taçsız Kral Mustafa',
+      deck: 'deste',
+      ready: true,
+      color: 'renk'
+    }, {
+      id: 'host3',
+      name: 'Yeni Çeri Abdullah',
+      deck: 'deste',
+      ready: true,
+      color: 'renk'
+    }
+    ]);
+
+
+
+  }, []);
+
+
   return (
     <>
       {isDev ?

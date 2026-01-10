@@ -2,8 +2,8 @@
 
 .turn-control-wrapper {
   position: fixed;
-  right: 40px;
-  bottom: 220px; /* Kart barının hemen üzerinde */
+  right: 20px;
+  top: 500px; /* Kart barının hemen üzerinde */
   display: flex;
   flex-direction: column;
   align-items: flex-end;

@@ -1,8 +1,12 @@
 import React from 'react';
 import { Coins, Apple, Users, Shield, Cpu } from 'lucide-react';
 import './css/TopBar.css';
+import { useGameContext } from '../../../contexts/GameContext';
 
 const TopBar = () => {
+  const { myPlayerName,tourCount } = useGameContext();
+
+
   const resources = [
     { label: 'ALTIN', val: 1250, inc: 45, icon: <Coins />, cls: 'gold-res' },
     { label: 'GIDA', val: 450, inc: 12, icon: <Apple />, cls: 'food-res' },
@@ -13,7 +17,7 @@ const TopBar = () => {
 
   return (
     <div className="top-bar-container">
-      <div className="player-name side-info">LORD ARTHUR</div>
+      <div className="player-name side-info">{myPlayerName}</div>
 
       <div className="resources-wrapper">
         {resources.map((res, index) => (
@@ -35,8 +39,8 @@ const TopBar = () => {
       </div>
 
       <div className="turn-box side-info">
-        <div style={{fontSize: '0.7rem', color: '#d4af37'}}>TUR</div>
-        <div style={{fontSize: '1.3rem', fontWeight: 'bold'}}>14</div>
+        <div style={{ fontSize: '0.7rem', color: '#d4af37' }}>TUR</div>
+        <div style={{ fontSize: '1.3rem', fontWeight: 'bold' }}>{tourCount}</div>
       </div>
     </div>
   );

@@ -12,6 +12,7 @@ import { CoinPouch } from '../model/coinpouch';
 import { Castle } from './../model/castle';
 
 /* HUD Imports */
+import { HudContainer } from './hud/HudContainer';
 
 
 function Hexagon({ position, color, height, emissiveIntensity, type }) {
@@ -181,7 +182,7 @@ export default function GameMap() {
   return (
     <div style={{ width: '100vw', height: '100vh', overflow: 'hidden', position: 'relative' }}>
       {/* HUD Bileşeni */}
-     
+     <HudContainer></HudContainer>
       <Canvas shadows
         camera={{ position: [10, 10, 40], fov: 60, far: 1000 }}
         raycaster={{ params: { Line: { threshold: 0.15 } } }}>

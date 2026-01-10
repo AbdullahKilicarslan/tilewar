@@ -4,10 +4,12 @@ import './css/MainMenu.css';
 import './css/LobbyScreen.css';
 import { useScreenContext } from '../../contexts/ScreenContext';
 import { useHubContext } from '../../contexts/HubContext';
+import { useGameContext } from '../../contexts/GameContext';
 
 const LobbyScreen = () => {
     const { OpenMapScreen, isHost } = useScreenContext();
     const { handleSend, users, hostMapId, setHostMapId, clientMapScreen } = useHubContext();
+    const { StartGame } = useGameContext();
 
     const [userName, setUserName] = useState('');
     const [selectedDeck, setSelectedDeck] = useState('Kuzey Krallığı');
@@ -42,6 +44,13 @@ const LobbyScreen = () => {
     }, [users, isReady]);
 
     const handleLobyClick = () => {
+        StartGame([{
+            id: 'host',
+            name: userName,
+            deck: selectedDeck,
+            ready: true,
+            color: selectedColor
+        }]);
         OpenMapScreen();
         handleSend({ type: 'mapScreenStatus', status: true });
     };
@@ -51,6 +60,7 @@ const LobbyScreen = () => {
         setSelectedMap(mapId); // Yerel state güncelleme
         setHostMapId(mapId);   // Global/Hub state güncelleme
         handleSend({ type: 'mapStatus', selectedMap: mapId });
+        
     };
 
     const handleColorChange = (color) => {

@@ -6,15 +6,14 @@ import TurnControl from './TurnControl'
 import PlayerList from './PlayerList'
 import RecruitmentPanel from './RecruitmentPanel'
 
-const HudContainer = () => {
+export const HudContainer = () => {
     return (
-        <>
+        <div>
             <TopBar></TopBar>
             <TurnControl></TurnControl>
             <PlayerList></PlayerList>
             <RecruitmentPanel></RecruitmentPanel>
             <BottomBar></BottomBar>
-        </>
+        </div>
     )
 }
-export default HudContainer;

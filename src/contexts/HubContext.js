@@ -16,6 +16,7 @@ export const useHubContext = () => {
 export const HubProvider = ({ children }) => {
 
   const [hostId, setHostId] = useState(null);
+  const [myId, setMyId] = useState(null);
   const [hostMapId, setHostMapId] = useState(null);
   const [clientMapScreen, setClientMapScreen] = useState(false);
 
@@ -36,7 +37,7 @@ export const HubProvider = ({ children }) => {
     setHostId(newHostId);
 
     const myRoom = joinRoom(config, newHostId);
-
+console.log(myRoom)
     // 2. Mesaj gönderme/alma fonksiyonlarını tanımla
     const [sendMessage, receiveMessage] = myRoom.makeAction('chat');
 
@@ -102,7 +103,8 @@ export const HubProvider = ({ children }) => {
     users,
     hostMapId,
     setHostMapId,
-    clientMapScreen
+    clientMapScreen,
+    myId
   };
 
   return (

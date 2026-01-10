@@ -5,6 +5,7 @@ import './App.css';
 import { AppProvider } from './contexts/AppContext';
 import { ScreenProvider } from './contexts/ScreenContext';
 import { HubProvider } from './contexts/HubContext';
+import { GameProvider } from './contexts/GameContext';
 
 function App() {
   return (
@@ -13,7 +14,9 @@ function App() {
       <AppProvider>
         <HubProvider>
           <ScreenProvider>
-            <Game />
+            <GameProvider>
+              <Game />
+            </GameProvider>
           </ScreenProvider>
         </HubProvider>
       </AppProvider>
