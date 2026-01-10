@@ -1,5 +1,6 @@
 import React, { useEffect, useState, createContext, useContext } from 'react';
-import { joinRoom } from 'trystero';
+import { joinRoom, selfId } from 'trystero';
+import { useGameContext } from './GameContext';
 
 const config = { appId: 'tilewar-ersdfsdf34sdf' };
 const HubContext = createContext();
@@ -15,17 +16,20 @@ export const useHubContext = () => {
 
 export const HubProvider = ({ children }) => {
 
+
+
   const [hostId, setHostId] = useState(null);
-  const [myId, setMyId] = useState(null);
+  const [myPeerId, setMyPeerId] = useState(null);
   const [hostMapId, setHostMapId] = useState(null);
   const [clientMapScreen, setClientMapScreen] = useState(false);
 
   const [room, setRoom] = useState(null);
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([]);
-  const [peers, setPeers] = useState([]);
   const [users, setUsers] = useState([]);
 
+
+  //useEffect(() => { setMyPeerId(selfId); }, [selfId]);
+
+  const [activePlayerIdHub, setActivePlayerIdHub] = useState('');
 
 
   const generateGuid = () => {
@@ -37,74 +41,120 @@ export const HubProvider = ({ children }) => {
     setHostId(newHostId);
 
     const myRoom = joinRoom(config, newHostId);
-console.log(myRoom)
-    // 2. Mesaj gönderme/alma fonksiyonlarını tanımla
-    const [sendMessage, receiveMessage] = myRoom.makeAction('chat');
 
+    setMyPeerId(selfId);
+
+    const [sendMessage, receiveMessage] = myRoom.makeAction('chat');
     // Gelen mesajları dinle
     receiveMessage((data, peerId) => {
-      setMessages((prev) => [...prev, { sender: peerId.substring(0, 5), text: data }]);
+    });
 
-      if (data && data.type === 'readyStatus') {
-        // Burada doğrudan users kullanmak yerine prevUsers (en güncel hali) kullanıyoruz
-        setUsers((prevUsers) => {
-          return prevUsers.map(user => {
-            if (user.id === peerId) {
-              return {
-                ...user,
-                name: data.name,
-                deck: data.deck,
-                ready: data.ready,
-                color: data.color
 
-              };
-            }
-            return user;
-          });
+    const [sendMessageReadyStatus, receiveMessageReadyStatus] = myRoom.makeAction('readyStatus');
+    const [sendMessageMapStatus, receiveMessageMapStatus] = myRoom.makeAction('mapStatus');
+    const [sendMessageMapScreenStatus, receiveMessageMapScreenStatus] = myRoom.makeAction('screenStatus');
+    const [sendMessageGameStatus, receiveMessageGameStatus] = myRoom.makeAction('GameStatus');
+
+
+
+    //readyStatus
+    receiveMessageReadyStatus((data, peerId) => {
+      setUsers((prevUsers) => {
+        return prevUsers.map(user => {
+          if (user.id === peerId) {
+            return {
+              ...user,
+              name: data.name,
+              deck: data.deck,
+              ready: data.ready,
+              color: data.color
+            };
+          }
+          return user;
         });
-      }
+      });
 
-      if (data && data.type === 'mapStatus') {
-        setHostMapId(data.selectedMap);
-      }
-      if (data && data.type === 'mapScreenStatus') {
-        setClientMapScreen(data.status);
+    });
+
+    //mapStatus
+    receiveMessageMapStatus((data, peerId) => {
+      setHostMapId(data.selectedMap);
+    });
+
+    //mapScreenStatus
+    receiveMessageMapScreenStatus((data, peerId) => {
+      setClientMapScreen(data.status);
+    });
+
+    receiveMessageGameStatus((data, peerId) => {
+      console.log('Hub: Mesaj geldi:', data);
+      if (data.type === 'activePlayer') {
+        setActivePlayerIdHub(null);
+        setTimeout(() => {
+          setActivePlayerIdHub(prevId => {
+            console.log(`Hub: Eski ID: ${prevId}, Yeni ID: ${data.activePlayerId}`);
+            return data.activePlayerId;
+          });
+        }, 10);
+
+
       }
     });
 
     // 3. Yeni bir eş (peer) bağlandığında veya ayrıldığında
     myRoom.onPeerJoin((peerId) => {
-      setPeers((prev) => [...prev, peerId]);
-      setUsers((prev) => [...prev, { id: peerId, name: null, deck: 'Standart', ready: false }]);
+      setUsers((prev) => [...prev, { id: peerId, name: 'Yeni Oyuncu...', deck: 'Standart', ready: false }]);
     });
 
     myRoom.onPeerLeave((peerId) => {
-      setPeers((prev) => prev.filter((p) => p !== peerId));
       setUsers((prev) => prev.filter((p) => p.id !== peerId));
     });
 
-    setRoom({ sendMessage });
+    setRoom({ sendMessage, sendMessageReadyStatus, sendMessageMapStatus, sendMessageMapScreenStatus, sendMessageGameStatus });
   }
 
-
-
-  const handleSend = (text) => {
-    if (room && text) {
-      room.sendMessage(text); // Odadaki herkese gönderir
-      setMessages((prev) => [...prev, { sender: 'Ben', text: text }]);
-      setMessage('');
+  const handleSend = (msg) => {
+    if (room && msg) {
+      room.sendMessage(msg);
     }
   };
-
+  const handleSendReadyStatus = (msg) => {
+    if (room && msg) {
+      room.sendMessageReadyStatus(msg);
+    }
+  };
+  const handleSendMapStatus = (msg) => {
+    if (room && msg) {
+      room.sendMessageMapStatus(msg);
+    }
+  };
+  const handleSendMapScreenStatus = (msg) => {
+    if (room && msg) {
+      room.sendMessageMapScreenStatus(msg);
+    }
+  };
+  const handleSendGameStatus = (msg) => {
+    if (room && msg) {
+      room.sendMessageGameStatus({ ...msg, sentAt: Date.now() });
+    }
+  };
   const value = {
+    handleSend,
+    handleSendReadyStatus,
+    handleSendMapStatus,
+    handleSendMapScreenStatus,
+    handleSendGameStatus,
+
     connectRoom,
     hostId,
-    handleSend,
     users,
     hostMapId,
     setHostMapId,
     clientMapScreen,
-    myId
+    myPeerId,
+
+
+    activePlayerIdHub
   };
 
   return (

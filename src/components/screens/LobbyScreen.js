@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, User, Scroll, Sword, CheckCircle, Circle, Map as MapIcon, Palette } from 'lucide-react';
+import {  User, Scroll, Sword, CheckCircle, Circle, Map as MapIcon, Palette } from 'lucide-react';
 import './css/MainMenu.css';
 import './css/LobbyScreen.css';
 import { useScreenContext } from '../../contexts/ScreenContext';
@@ -8,7 +8,7 @@ import { useGameContext } from '../../contexts/GameContext';
 
 const LobbyScreen = () => {
     const { OpenMapScreen, isHost } = useScreenContext();
-    const { handleSend, users, hostMapId, setHostMapId, clientMapScreen } = useHubContext();
+    const { users, hostMapId, setHostMapId, clientMapScreen, myPeerId, handleSendReadyStatus, handleSendMapStatus, handleSendMapScreenStatus, } = useHubContext();
     const { StartGame } = useGameContext();
 
     const [userName, setUserName] = useState('');
@@ -19,6 +19,9 @@ const LobbyScreen = () => {
 
     // --- HATA GİDERİLEN KISIM: selectedMap State Tanımı ---
     const [selectedMap, setSelectedMap] = useState(1);
+
+    const [hostMapScreen, setHostMapScreen] = useState(false);
+
 
     const colorOptions = [
         { name: 'Kraliyet', code: '#8b0000' },
@@ -35,8 +38,19 @@ const LobbyScreen = () => {
     ];
 
     useEffect(() => {
-        if (clientMapScreen) OpenMapScreen();
-    }, [clientMapScreen, OpenMapScreen]);
+        if (clientMapScreen || hostMapScreen) //eğer client  ve host ekran açıldıysa 
+        {
+            OpenMapScreen(); //Oyuncularda ekran açılacak.
+
+            StartGame([{
+                id: myPeerId,
+                name: userName,
+                deck: selectedDeck,
+                ready: isReady,
+                color: selectedColor
+            }]);
+        }
+    }, [clientMapScreen,hostMapScreen]);
 
     useEffect(() => {
         if (users.length > 0)
@@ -44,39 +58,37 @@ const LobbyScreen = () => {
     }, [users, isReady]);
 
     const handleLobyClick = () => {
-        StartGame([{
-            id: 'host',
-            name: userName,
-            deck: selectedDeck,
-            ready: true,
-            color: selectedColor
-        }]);
-        OpenMapScreen();
-        handleSend({ type: 'mapScreenStatus', status: true });
+        setHostMapScreen(true);//hostta ekran açılacak
+        handleSendMapScreenStatus({ type: 'mapScreenStatus', status: true }); // clientlara bildirilcek
     };
 
     const handleSelectedMap = (mapId) => {
         if (!isHost || isReady) return;
         setSelectedMap(mapId); // Yerel state güncelleme
         setHostMapId(mapId);   // Global/Hub state güncelleme
-        handleSend({ type: 'mapStatus', selectedMap: mapId });
-        
+        handleSendMapStatus({ type: 'mapStatus', selectedMap: mapId });
+
+    };
+
+    const handleUserNameChange = (e) => {
+        setUserName(e.target.value)
+        handleSendReadyStatus({ type: 'readyStatus', ready: isReady, name: e.target.value, deck: selectedDeck, color: selectedColor });
     };
 
     const handleColorChange = (color) => {
         if (isReady || isColorTaken(color)) return;
         setSelectedColor(color);
-        handleSend({ type: 'readyStatus', ready: isReady, name: userName, deck: selectedDeck, color: color });
+        handleSendReadyStatus({ type: 'readyStatus', ready: isReady, name: userName, deck: selectedDeck, color: color });
     };
 
     const handleDeckChange = (e) => {
         const newDeck = e.target.value;
         setSelectedDeck(newDeck);
-        handleSend({ type: 'readyStatus', ready: isReady, name: userName, deck: newDeck, color: selectedColor });
+        handleSendReadyStatus({ type: 'readyStatus', ready: isReady, name: userName, deck: newDeck, color: selectedColor });
     };
 
     const userReady = () => {
-        handleSend({ type: 'readyStatus', ready: !isReady, name: userName, deck: selectedDeck, color: selectedColor });
+        handleSendReadyStatus({ type: 'readyStatus', ready: !isReady, name: userName, deck: selectedDeck, color: selectedColor });
         setIsReady(!isReady);
     };
 
@@ -110,7 +122,7 @@ const LobbyScreen = () => {
                         <div className="medieval-input-wrap">
                             <User size={18} color="#8b4513" />
                             <input className="m-input" placeholder="Karakter İsmi..." value={userName}
-                                onChange={(e) => setUserName(e.target.value)} disabled={isReady} />
+                                onChange={(e) => handleUserNameChange(e)} disabled={isReady} />
                         </div>
 
                         <div className="medieval-input-wrap">

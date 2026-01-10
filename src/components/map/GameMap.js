@@ -99,7 +99,7 @@ export default function GameMap() {
   };
 
   const myFunction = () => {
-    console.log('Component2 fonksiyonu çalıştı!');
+   // console.log('Component2 fonksiyonu çalıştı!');
   };
   useEffect(() => {
 

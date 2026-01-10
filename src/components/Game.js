@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect } from 'react';
+import React, {   useEffect } from 'react';
 import GameMap from './map/GameMap'; // HexMap.js dosyasının aynı klasörde olduğunu varsayıyoruz
 //import MainHub from './hub/MainHub'; // HexMap.js dosyasının aynı klasörde olduğunu varsayıyoruz
 
@@ -16,7 +16,7 @@ export default function Game() {
   const { gameScreen } = useAppContext();
   const { isMainMenuScreen, isHostScreen, isLobyScreen, isMapScreen, isClientScreen } = useScreenContext();
   const { StartGame } = useGameContext();
-  const isDev = true
+  const isDev = false; // Geliştirme modu için true yapabilirsiniz
 
 
   useEffect(() => {

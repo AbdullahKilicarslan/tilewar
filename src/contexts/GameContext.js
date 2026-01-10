@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { useHubContext } from './HubContext';
 
 // Context oluştur
@@ -15,36 +15,58 @@ export const useGameContext = () => {
 
 // Provider component
 export const GameProvider = ({ children }) => {
-  const {users} = useHubContext();
+  const { users, handleSendGameStatus, activePlayerIdHub } = useHubContext();
 
-  
+
   const [gameUsers, setGameUsers] = useState([]);
-  const [activePlayerId, setActivePlayerId] = useState('1');
+  const [activePlayerId, setActivePlayerId] = useState('');
   const [myPlayerName, setMyPlayerName] = useState('');
   const [myPlayerId, setMyPlayerId] = useState('2');
 
-    const [tourCount, setTourCount] = useState(1);
+  const [tourCount, setTourCount] = useState(1);
+
+
+  useEffect(() => {
+    console.log("GameContext: activePlayerIdHub değişti:", activePlayerIdHub);
+    console.log("GameContext: activePlayerId değişti:", activePlayerId);
+
+    if (activePlayerIdHub !== '' && activePlayerIdHub !== activePlayerId)
+      setActivePlayerId(activePlayerIdHub);
+
+  }, [activePlayerIdHub]); // activePlayerId'yi eklemek takibi kolaylaştırır
 
   const StartGame = (hostUser) => {
-    setGameUsers([...users,...hostUser]);
-
+    console.log('Game Starting with users:', users, 'and hostUser:', hostUser);
+    const sortedUsers = [...users, ...hostUser].sort((a, b) => {
+      if (a.id < b.id) return -1;
+      if (a.id > b.id) return 1;
+      return 0;
+    });
+    setGameUsers(sortedUsers);
     setMyPlayerId(hostUser[0].id);
     setMyPlayerName(hostUser[0].name);
-    setActivePlayerId(hostUser[0].id);
+    setActivePlayerId(sortedUsers[0].id);
   }
- 
+
+  const SetActivePlayer = (playerId) => {
+    setActivePlayerId(playerId);
+    handleSendGameStatus({ type: 'activePlayer', activePlayerId: playerId });
+  }
+
+
   const value = {
 
     gameUsers,
     StartGame,
-    activePlayerId,
-    setActivePlayerId,
     myPlayerName,
     setMyPlayerName,
     tourCount,
     setTourCount,
     myPlayerId,
-    setMyPlayerName
+
+    SetActivePlayer,
+    activePlayerId,
+    setActivePlayerId
   };
 
 
