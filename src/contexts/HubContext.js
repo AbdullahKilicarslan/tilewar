@@ -89,15 +89,7 @@ export const HubProvider = ({ children }) => {
     receiveMessageGameStatus((data, peerId) => {
       console.log('Hub: Mesaj geldi:', data);
       if (data.type === 'activePlayer') {
-        setActivePlayerIdHub(null);
-        setTimeout(() => {
-          setActivePlayerIdHub(prevId => {
-            console.log(`Hub: Eski ID: ${prevId}, Yeni ID: ${data.activePlayerId}`);
-            return data.activePlayerId;
-          });
-        }, 10);
-
-
+        setActivePlayerIdHub(data);
       }
     });
 
@@ -115,22 +107,22 @@ export const HubProvider = ({ children }) => {
 
   const handleSend = (msg) => {
     if (room && msg) {
-      room.sendMessage(msg);
+      room.sendMessage({ ...msg, sentAt: Date.now() });
     }
   };
   const handleSendReadyStatus = (msg) => {
     if (room && msg) {
-      room.sendMessageReadyStatus(msg);
+      room.sendMessageReadyStatus({ ...msg, sentAt: Date.now() });
     }
   };
   const handleSendMapStatus = (msg) => {
     if (room && msg) {
-      room.sendMessageMapStatus(msg);
+      room.sendMessageMapStatus({ ...msg, sentAt: Date.now() });
     }
   };
   const handleSendMapScreenStatus = (msg) => {
     if (room && msg) {
-      room.sendMessageMapScreenStatus(msg);
+      room.sendMessageMapScreenStatus({ ...msg, sentAt: Date.now() });
     }
   };
   const handleSendGameStatus = (msg) => {

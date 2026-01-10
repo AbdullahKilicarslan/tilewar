@@ -30,8 +30,7 @@ export const GameProvider = ({ children }) => {
     console.log("GameContext: activePlayerIdHub değişti:", activePlayerIdHub);
     console.log("GameContext: activePlayerId değişti:", activePlayerId);
 
-    if (activePlayerIdHub !== '' && activePlayerIdHub !== activePlayerId)
-      setActivePlayerId(activePlayerIdHub);
+    setActivePlayerId(activePlayerIdHub.activePlayerId);
 
   }, [activePlayerIdHub]); // activePlayerId'yi eklemek takibi kolaylaştırır
 
