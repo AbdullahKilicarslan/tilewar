@@ -31,14 +31,6 @@ const TurnControl = ({
         </div>
       </div>
 
-      {/* AKTİF KULLANICI ADI */}
-      <div className="active-user-badge">
-        <div className="user-title">Oyuncu</div>
-        <div className="user-name">
-            <Crown size={14} style={{marginRight: '8px', verticalAlign: 'middle'}} />
-            {playerName}
-        </div>
-      </div>
 
       {/* Turu Bitir Butonu */}
       <button className="end-turn-btn" onClick={handleEndTurn}>

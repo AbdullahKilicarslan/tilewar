@@ -6,39 +6,13 @@ import { Sky, OrbitControls, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 
 import { useAppContext } from '../../contexts/AppContext';
-import { CoinPouch } from '../model/coinpouch';
-import BottomBar from './hud/BottomBar'
-import TopBar from './hud/TopBar'
-import TurnControl from './hud/TurnControl'
-import PlayerList from './hud/PlayerList'
-import RecruitmentPanel from './hud/RecruitmentPanel'
 
+/* Model Imports */
+import { CoinPouch } from '../model/coinpouch';
 import { Castle } from './../model/castle';
 
+/* HUD Imports */
 
-// Altıgen Bileşeni (Görsel Harita)
-function HexagonTexture({ position, texturePath, height }) {
-
-  const texture = useTexture(texturePath)
-
-  const [sideTex] = useTexture([
-    '/assets/tile/side.png'
-  ])
-  const adjustedPosition = [
-    position[0],
-    position[1] + height / 2, // Alt tabanı sıfıra sabitleyen sihirli dokunuş
-    position[2]
-  ];
-  return (
-    <mesh position={adjustedPosition} rotation={[Math.PI, 0, 0]}>
-      <cylinderGeometry args={[1, 1, height, 6]} />
-
-      <meshStandardMaterial attach="material-0" map={sideTex} color="white" />
-      <meshStandardMaterial attach="material-1" map={texture} flatShading />
-      <meshStandardMaterial attach="material-2" map={texture} color="white" />
-    </mesh>
-  )
-}
 
 function Hexagon({ position, color, height, emissiveIntensity, type }) {
   const [hovered, setHovered] = React.useState(false);
@@ -50,27 +24,15 @@ function Hexagon({ position, color, height, emissiveIntensity, type }) {
     <group position={position}>
       {/* Altın kesesi varsa, etkileşimi engellememesi için mesh dışında tutuyoruz */}
       {type === 'gold' && (
-        <CoinPouch
-          position={[0, height / 2 + 0.5, 0]}
-          scale={0.2}
-          speed={2}
-        />
+        <CoinPouch position={[0, height / 2 + 0.5, 0]} scale={0.2} speed={2} />
       )}
 
       {type === 'stronghold' && (
-        <Castle
-          position={[0, height / 2, 0]}
-          scale={0.7}
-          speed={2}
-        />
+        <Castle position={[0, height / 2, 0]} scale={0.7} speed={2} />
       )}
-      <mesh
-        rotation={[Math.PI, 0, 0]}
-        castShadow
-        receiveShadow
-        // Hover olaylarını mesh üzerine aldık
+      <mesh rotation={[Math.PI, 0, 0]} castShadow receiveShadow
         onPointerEnter={(e) => {
-          e.stopPropagation(); // Diğer objelerin tetiklenmesini durdur
+          e.stopPropagation();
           setHovered(true);
         }}
         onPointerLeave={(e) => {
@@ -99,8 +61,8 @@ function Hexagon({ position, color, height, emissiveIntensity, type }) {
       {/* Görsel Seçim Çerçevesi (Opsiyonel ama kararlılık sağlar) */}
 
       <lineSegments rotation={[Math.PI, 0, 0]}>
-        <edgesGeometry args={[new THREE.CylinderGeometry(1, 1, height + 0.1, 6)]} />
-        <lineBasicMaterial color="#74746f" transparent opacity={0.5} linewidth={0.1} />
+        <edgesGeometry args={[new THREE.CylinderGeometry(1, 1, height, 6)]} />
+        <lineBasicMaterial color="#8b8b1c" transparent opacity={0.4} linewidth={0.01} />
       </lineSegments>
 
 
@@ -111,15 +73,8 @@ function Hexagon({ position, color, height, emissiveIntensity, type }) {
     </group>
   );
 }
-// Hareket Eden Küp (Birim)
-function Unit({ unitRef }) {
-  return (
-    <mesh ref={unitRef} position={[0, 0.5, 0]}> {/* Y ekseni 0.5: Altıgenin üzerinde durması için */}
-      <boxGeometry args={[0.5, 0.5, 0.5]} />
-      <meshStandardMaterial color="red" />
-    </mesh>
-  )
-}
+
+
 
 export default function GameMap() {
 
@@ -141,9 +96,9 @@ export default function GameMap() {
     // Tekrar HEX'e çevir
     return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
   };
+
   const myFunction = () => {
     console.log('Component2 fonksiyonu çalıştı!');
-    // moveUnit();
   };
   useEffect(() => {
 
@@ -151,12 +106,7 @@ export default function GameMap() {
 
   }, [trigger]);
 
-  const unitRef = useRef()
-  const [mapData, setMapData] = useState([])
 
-
-
-  // Harita verisini bir kez oluştur
   const hexSize = 1;
   const xSpacing = Math.sqrt(3) * hexSize;
   const zSpacing = 1.5 * hexSize;
@@ -172,7 +122,7 @@ export default function GameMap() {
         const x = (c + Math.abs(r - centerRow) / 2) * xSpacing;
         const z = r * zSpacing;
 
-        let height = Math.random() > 0.7 ? (1 + Math.random()) : 0.6; // Dağlar biraz daha yüksek
+        let height = Math.random() > 0.7 ? (1 + Math.random()) : 1; // Dağlar biraz daha yüksek
         let type = 'normal';
 
         // KONSEPT RENKLERİ
@@ -180,7 +130,7 @@ export default function GameMap() {
         // Dağ: Koyu taş grisi/kahve
         // Kenarlar/Kaleler: Altın/Bronz vurgular
         let cc = height > 1 ? '#7f550d' : '#274619';
-         cc = getVariantColor(cc, 15);
+        cc = getVariantColor(cc, 15);
         // Köşe ve Stratejik Noktalar (Kırmızıyı "Kraliyet Kırmızısı"na çekiyoruz)
         if ((c === 0 && r === 0) || (c === rowWidth - 1 && r === 12) ||
           (c === 0 && r === 12) || (c === rowWidth - 1 && r === 0) ||
@@ -198,12 +148,12 @@ export default function GameMap() {
         } else if (rand > 0.92) {
           cc = '#236cb6'; // Safir Mavisi (Su veya Mana kaynağı)
           type = 'mana';
-          height = height - rand;
+          height = height - (1 - rand) * 4;
         }
 
         temp.push({
           id: `hex-${r}-${c}`,
-          position: [x, 0, z],
+          position: [x, height / 2, z],
           height: height,
           color: cc,
           emissive: cc,
@@ -228,91 +178,25 @@ export default function GameMap() {
     return [centerX, 0, centerZ];
   }, [cells]);
 
-  // Rastgele Hücreye Gitme Fonksiyonu
-  const moveUnit = () => {
-    if (mapData.length === 0) return;
-
-    // Rastgele bir hücre seç
-    const randomCell = mapData[Math.floor(Math.random() * mapData.length)];
-    const [targetX, targetY, targetZ] = randomCell.position;
-
-    // GSAP ile animasyon
-    gsap.to(unitRef.current.position, {
-      x: targetX,
-      z: targetZ,
-      y: 1.5, // Giderken biraz havaya kalksın (yaylanma efekti)
-      duration: 0.5,
-      ease: "power2.out",
-      onComplete: () => {
-        // Hedefe vardığında tam üzerine kon
-        gsap.to(unitRef.current.position, { y: 0.5, duration: 0.2 });
-      }
-    });
-  };
-
-
-  const buttonStyle = {
-    padding: '12px 24px', fontSize: '18px', cursor: 'pointer',
-    backgroundColor: '#ff4757', color: 'white', border: 'none', borderRadius: '8px'
-  };
-
   return (
     <div style={{ width: '100vw', height: '100vh', overflow: 'hidden', position: 'relative' }}>
-
-      {/* Üst Arayüz (Enerji Barı vb.) */}
-      <div style={{ position: 'absolute', top: '160px', left: '20px', zIndex: 100, display: 'flex', gap: '10px' }}>
-        <button onClick={moveUnit} style={buttonStyle}>Zar At</button>
-      </div>
-
-
-
-      <TopBar></TopBar>
-      <TurnControl></TurnControl>
-      <PlayerList></PlayerList>
-      <RecruitmentPanel></RecruitmentPanel>
+      {/* HUD Bileşeni */}
+     
       <Canvas shadows
         camera={{ position: [10, 10, 40], fov: 60, far: 1000 }}
         raycaster={{ params: { Line: { threshold: 0.15 } } }}>
-        {/* Arka planı HUD ile uyumlu çok koyu lacivert/siyah yapıyoruz */}
-        <color attach="background" args={['#050505']} />
-
-        <ambientLight intensity={0.4} /> {/* Genel aydınlatmayı biraz kıstık ki parlamalar belli olsun */}
-
-        {/* Işığın açısını ve gücünü artırarak siyahlığı engelliyoruz */}
-        <directionalLight
-          position={[20, 50, 20]}
-          intensity={1.5}
-          castShadow
-          shadow-mapSize={[2048, 2048]}
-        />
-
-        {/* Gökyüzünü daha dramatik, akşamüstü/gece moduna alıyoruz */}
+        <ambientLight intensity={1.5} />
+        <directionalLight position={[20, 50, 20]} intensity={1} castShadow shadow-mapSize={[2048, 2048]} />
         <Sky sunPosition={[-100, 10, -100]} distance={450000} inclination={0.6} azimuth={0.1} />
 
         {cells.map((cell) => (
-          <Hexagon
-            key={cell.id}
-            type={cell.type}
-            position={cell.position}
-            texturePath={cell.tex}
-            height={cell.height}
-            color={cell.color}
-            emissiveIntensity={cell.emissiveIntensity}
-          />
+          <Hexagon key={cell.id} type={cell.type} position={cell.position} texturePath={cell.tex} height={cell.height} color={cell.color} emissiveIntensity={cell.emissiveIntensity} />
         ))}
 
-        <Unit unitRef={unitRef} />
-        <OrbitControls
-          target={center}
-          makeDefault
-          enablePan={false}
-          maxPolarAngle={Math.PI / 2.1}
-          maxDistance={50}
-          minDistance={5}
-        />
+        <OrbitControls target={center} makeDefault enablePan={false} maxPolarAngle={Math.PI / 2.1} maxDistance={50} minDistance={5} />
       </Canvas>
 
-      <BottomBar></BottomBar>
+
     </div>
   )
 }

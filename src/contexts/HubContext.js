@@ -53,7 +53,9 @@ export const HubProvider = ({ children }) => {
                 ...user,
                 name: data.name,
                 deck: data.deck,
-                ready: data.ready
+                ready: data.ready,
+                color: data.color
+
               };
             }
             return user;

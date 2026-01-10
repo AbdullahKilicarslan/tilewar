@@ -14,17 +14,19 @@ import { useScreenContext } from '../contexts/ScreenContext';
 export default function Game() {
   const { gameScreen } = useAppContext();
   const { isMainMenuScreen, isHostScreen, isLobyScreen, isMapScreen, isClientScreen } = useScreenContext();
-
+  const isDev = false
   return (
     <>
-     <GameMap /> 
-     {/*
-
-      {isMainMenuScreen && <MainMenu />}
-      {isHostScreen && <HostScreen />}
-      {isClientScreen && <ClientScreen />}
-      {isLobyScreen && <LobbyScreen />}
-      {isMapScreen && <GameMap />} */}
+      {isDev ?
+        <GameMap />
+        : <>
+          {isMainMenuScreen && <MainMenu />}
+          {isHostScreen && <HostScreen />}
+          {isClientScreen && <ClientScreen />}
+          {isLobyScreen && <LobbyScreen />}
+          {isMapScreen && <GameMap />}
+        </>
+      }
     </>
   );
 }
