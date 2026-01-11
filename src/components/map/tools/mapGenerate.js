@@ -197,7 +197,7 @@ const Map3 = () => {
     return { map: temp, strongholds: strongholds };
 
 };
-const generateMapByName = (mapName) => {
+const generateByName = (mapName) => {
     // mapName string olarak gelir: "Map1", "Map2" veya "Map3"
     
     if (mapGenerate[mapName]) {
@@ -211,7 +211,7 @@ const generateMapByName = (mapName) => {
 };
 const mapGenerate = {
    Map1,Map2,Map3,
-    generateMapByName
+    generateByName
 };
 
 export default mapGenerate;

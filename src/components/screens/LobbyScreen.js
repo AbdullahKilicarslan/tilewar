@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {  User, Scroll, Sword, CheckCircle, Circle, Map as MapIcon, Palette } from 'lucide-react';
+import { User, Scroll, Sword, CheckCircle, Circle, Map as MapIcon, Palette } from 'lucide-react';
 import './css/MainMenu.css';
 import './css/LobbyScreen.css';
 import { useScreenContext } from '../../contexts/ScreenContext';
@@ -13,7 +13,7 @@ const LobbyScreen = () => {
     const { StartGame } = useGameContext();
 
     const [userName, setUserName] = useState('');
-    const [selectedDeck, setSelectedDeck] = useState('Kuzey Krallığı');
+    const [selectedDeck, setSelectedDeck] = useState('1');
     const [selectedColor, setSelectedColor] = useState('#ffffff');
     const [isReady, setIsReady] = useState(false);
     const [isReadyAll, setIsReadyAll] = useState(false);
@@ -39,8 +39,8 @@ const LobbyScreen = () => {
     ];
 
     useEffect(() => {
-        var map =hostMapScreen?mapGenerate.generateMapByName("Map"+selectedMap):null;
-       
+        var map = hostMapScreen ? mapGenerate.generateByName("Map" + selectedMap) : null;
+      
         if (clientMapScreen || hostMapScreen) //eğer client  ve host ekran açıldıysa 
         {
             OpenMapScreen(); //Oyuncularda ekran açılacak.
@@ -51,9 +51,9 @@ const LobbyScreen = () => {
                 deck: selectedDeck,
                 ready: isReady,
                 color: selectedColor
-            }],map);
+            }], map);
         }
-    }, [clientMapScreen,hostMapScreen]);
+    }, [clientMapScreen, hostMapScreen]);
 
     useEffect(() => {
         if (users.length > 0)
@@ -131,9 +131,9 @@ const LobbyScreen = () => {
                         <div className="medieval-input-wrap">
                             <Scroll size={18} color="#8b4513" />
                             <select className="m-input" disabled={isReady} value={selectedDeck} onChange={handleDeckChange}>
-                                <option value="Kuzey Krallığı">Deste: Kuzey Krallığı</option>
-                                <option value="Barbar İstilası">Deste: Barbar İstilası</option>
-                                <option value="Gölge Alayı">Deste: Gölge Alayı</option>
+                                <option value="1">Deste: Kuzey Krallığı</option>
+                                <option value="2">Deste: Barbar İstilası</option>
+                                <option value="3">Deste: Gölge Alayı</option>
                             </select>
                         </div>
 

@@ -1,227 +1,148 @@
-/* GameHUD.css - Tile War Bütünleşik Savaş Arayüzü */
-
 @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=MedievalSharp&display=swap');
 
 :root {
   --gold: #d4af37;
-  --gold-glow: rgba(212, 175, 55, 0.8);
-  --spell-glow: rgba(52, 152, 219, 0.8);
-  --struct-glow: rgba(230, 126, 34, 0.8);
-  --bg-dark: rgba(26, 15, 10, 0.9); /* AP Paneli ile aynı temel renk */
+  --cyan-ap: #00ced1;
+  /* Tip Renkleri */
+  --military-color: #e74c3c;
+  --economy-color: #f1c40f;
+  --terrain-color: #2ecc71;
+  --magic-color: #9b59b6;
 }
 
-/* 1. ANA ALT BAR KONTEYNIRI */
 .hud-bottom-bar {
   position: fixed;
   bottom: 0;
-  left: 0;
   width: 100%;
-  height: 250px; 
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.5) 60%, transparent 100%);
+  height: 280px;
+  background: linear-gradient(to top, #000 30%, transparent);
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: flex-end;
-  padding: 0 0 10px 0;
-  z-index: 1000;
-  pointer-events: none; 
+  padding-bottom: 20px;
+  z-index: 9999; /* En üstte görünmesi için yükseltildi */
 }
 
-.hud-bottom-bar > * {
-  pointer-events: auto; /* İkonlar ve kartlar tıklanabilir */
-}
-
-/* 2. KART DESTE ALANI (ORTA) */
 .hand-container {
   display: flex;
-  gap: 15px;
-  align-items: flex-end;
-  justify-content: center;
-  height: 20px;
+  gap: 12px;
 }
 
+/* GENEL KART YAPISI */
 .game-card {
-  width: 130px;
-  height: 180px;
+  width: 165px;
+  height: 245px;
+  background: #0a0a0a;
   border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  position: relative;
   display: flex;
   flex-direction: column;
-  padding: 12px;
-  position: relative;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-  border: 3px solid #333;
-  backdrop-filter: blur(8px);
-  background: var(--bg-dark);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  /* Varsayılan Çerçeve */
+  border: 2px solid var(--gold);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.7);
 }
 
-.game-card.unit { border-color: var(--gold); --current-glow: var(--gold-glow); }
-.game-card.spell { border-color: #3498db; --current-glow: var(--spell-glow); }
-.game-card.structure { border-color: #e67e22; --current-glow: var(--struct-glow); }
+/* DİNAMİK ÇERÇEVE VE IŞIMA RENKLERİ */
+.game-card.military { border-color: var(--military-color); --type-glow: var(--military-color); }
+.game-card.economy { border-color: var(--economy-color); --type-glow: var(--economy-color); }
+.game-card.terrain { border-color: var(--terrain-color); --type-glow: var(--terrain-color); }
+.game-card.magic { border-color: var(--magic-color); --type-glow: var(--magic-color); }
 
 .game-card:hover {
-  transform: translateY(-90px) scale(1.1);
-  z-index: 1100;
-  box-shadow: 0 0 50px var(--current-glow);
-  border-color: #fff;
+  transform: translateY(-35px) scale(1.05);
+  box-shadow: 0 15px 40px var(--type-glow); /* Kendi renginde parlar */
+  z-index: 100;
 }
 
-.card-cost {
-  background: var(--current-glow);
-  color: white;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid #fff;
-  font-size: 1.3rem;
+/* TURKUAZ AP (Sol Üst) */
+.card-cost-cyan {
   position: absolute;
-  top: -12px;
-  left: -12px;
-  z-index: 5;
-  text-shadow: 1px 1px 2px #000;
-}
-
-.card-art-area {
-  flex-grow: 1;
-  margin: 15px 0;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  top: 5px;
+  left: 5px;
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(circle, var(--cyan-ap), #008b8b);
+  border: 2px solid #fff;
+  border-radius: 50%;
   display: flex;
-  justify-content: center;
   align-items: center;
-  border-radius: 8px;
-}
-
-.card-art-area svg {
-  color: #ffffff !important;
-  filter: drop-shadow(0 0 10px var(--current-glow));
-}
-
-.card-title {
-  font-family: 'Cinzel Decorative', serif;
-  text-align: center;
-  font-size: 0.9rem;
+  justify-content: center;
   color: #fff;
-  padding: 8px 4px;
-  background: rgba(0, 0, 0, 0.7);
-  border: 1px solid var(--current-glow);
-  border-radius: 4px;
+  font-family: 'Cinzel Decorative', serif;
+  font-weight: bold;
+  font-size: 1.1rem;
+  z-index: 20;
+  box-shadow: 0 0 10px rgba(0,206,209,0.6);
 }
 
-/* 3. YAN İKONLAR VE MODERNE DÖNÜŞTÜRÜLMÜŞ PANELLER */
-.hud-icon-container {
-  position: relative;
-  /* AP Paneli ile aynı stil */
-  background: rgba(26, 15, 10, 0.85);
-  backdrop-filter: blur(8px);
-  border: 2px solid var(--gold);
-  border-radius: 8px;
+/* ÜST GÖRSEL KISMI */
+.card-image-section {
+  height: 85px;
+  background: rgba(255,255,255,0.03);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--type-glow); /* İkon da kartın tip renginde parlar */
+}
+
+/* TİP BANNER */
+.card-type-banner {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  text-align: center;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 0.65rem;
+  padding: 4px 0;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* AÇIKLAMA ALANI (Net Okunurluk) */
+.card-desc-section {
+  flex: 1;
   padding: 12px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 80px;
-  min-height: 80px;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-  cursor: pointer;
-  pointer-events: auto;
+  background: rgba(0,0,0,0.5);
 }
 
-/* Konteynırların altına küçük bir etiket (Açıklama) */
-.hud-icon-container::after {
-  content: attr(data-label); /* JS'den gelen etiketi buraya basar */
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 0.6rem;
-  color: var(--gold);
-  margin-top: 5px;
-  letter-spacing: 1px;
-}
-
-.hud-icon-container:hover {
-  transform: translateY(-10px) scale(1.05);
-  border-color: #fff;
-  box-shadow: 0 0 20px var(--gold-glow);
-}
-
-.hud-icon-container svg {
-  color: var(--gold);
-  transition: color 0.3s;
-}
-
-.hud-icon-container:hover svg {
-  color: #fff;
-}
-
-/* YENİ: Aksiyon Puanı Paneliyle Uyumlu Önizleme Panelleri */
-.preview-panel {
-  position: absolute;
-  bottom: 100px;
-  width: 240px;
-  background: var(--bg-dark); /* Koyu, AP paneli ile aynı */
-  backdrop-filter: blur(10px); /* Arkayı bulanıklaştırır */
-  border: 2px solid var(--gold); /* Altın çerçeve */
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.9), inset 0 0 15px rgba(212, 175, 55, 0.1);
-  color: #fff;
-  z-index: 2000;
-  animation: panelFadeUp 0.3s ease-out;
-}
-
-@keyframes panelFadeUp {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.left-preview { left: 0; }
-.right-preview { right: 0; left: auto; }
-
-.preview-panel h4 {
-  font-family: 'Cinzel Decorative', serif;
-  color: var(--gold);
+.card-desc-section p {
+  font-family: 'MedievalSharp', cursive;
   font-size: 0.85rem;
-  letter-spacing: 2px;
-  margin-bottom: 12px;
+  color: #f2e3bc; /* Parşömen rengi yazı */
   text-align: center;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
-  padding-bottom: 8px;
-  text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-}
-
-.preview-panel ul {
-  list-style: none;
-  padding: 0;
+  line-height: 1.3;
   margin: 0;
 }
 
-.preview-panel li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 10px;
-  margin-bottom: 4px;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 4px;
-  font-family: 'MedievalSharp', cursive;
-  font-size: 0.95rem;
-  transition: background 0.2s;
+/* EN ALT İSİM ALANI */
+.card-footer-title {
+  background: #1a1a1a;
+  padding: 10px 0;
+  text-align: center;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 0.75rem;
+  color: #fff;
+  border-top: 1px solid rgba(255,255,255,0.1);
 }
 
-.preview-panel li:hover {
-  background: rgba(212, 175, 55, 0.15);
-}
-
-.preview-panel li span:first-child {
-  color: #f2e3bc; /* Parşömen beyazı */
-}
-
-.preview-panel li span:last-child {
+/* YAN BUTONLAR */
+.hud-icon-container {
+  position: absolute;
+  bottom: 30px;
   color: var(--gold);
-  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: 0.2s;
 }
+.left-btn { left: 40px; }
+.right-btn { right: 40px; }
+.hud-icon-container:hover { transform: scale(1.1); color: #fff; }
+.icon-label { font-size: 0.6rem; margin-top: 5px; font-family: 'Cinzel Decorative'; }

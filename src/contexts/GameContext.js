@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useHubContext } from './HubContext';
 import generalTools from '../tools/generalTools';
+import deckGenerate from '../components/map/tools/deckGenerate';
 
 // Context oluştur
 const GameContext = createContext();
@@ -23,6 +24,11 @@ export const GameProvider = ({ children }) => {
   const [activePlayerId, setActivePlayerId] = useState('');
   const [myPlayerName, setMyPlayerName] = useState('');
   const [myPlayerId, setMyPlayerId] = useState('2');
+  const [myPlayerDeck, setMyPlayerDeck] = useState([]);
+  const [myPlayerDeckDraw, setMyPlayerDeckDraw] = useState([]);
+  const [myPlayerDeckDiscard, setMyPlayerDeckDiscard] = useState([]);
+
+  const [myPlayerDeckOnHand, setMyPlayerDeckOnHand] = useState([]);
 
   const [tourCount, setTourCount] = useState(1);
 
@@ -31,8 +37,10 @@ export const GameProvider = ({ children }) => {
 
 
   useEffect(() => {
-    if (mapDataHub)
-      setMapData(mapDataHub.map);
+    if (mapDataHub) {
+      setMapData(mapDataHub.map.map);
+
+    }
   }, [mapDataHub]);
 
   useEffect(() => {
@@ -54,9 +62,12 @@ export const GameProvider = ({ children }) => {
     setMyPlayerId(hostUser[0].id);
     setMyPlayerName(hostUser[0].name);
     setActivePlayerId(sortedUsers[0].id);
-
+    let deck2 = deckGenerate.generateByName('Deck' + hostUser[0].deck);
+    setMyPlayerDeck([...deck2])
+    setMyPlayerDeckDraw([...deck2].slice(5));
+    setMyPlayerDeckOnHand([...deck2].slice(0, 5));
     if (map) {
-      //sadece host yaacak
+      //sadece host yapacak
       let sp = generalTools.shuffleArray(map.strongholds).slice(0, sortedUsers.length)
       for (let i = 0; i < sp.length; i++) {
         sp[i].peerId = sortedUsers[i].id;
@@ -66,7 +77,7 @@ export const GameProvider = ({ children }) => {
       handleSendGameStatus({ type: 'strongholdPositions', strongholdPositions: sp });
 
       setMapData(map.map);
-      handleSendGameStatus({ type: 'map', map: map.map });
+      handleSendGameStatus({ type: 'map', map: map });
     }
 
   }
@@ -74,9 +85,21 @@ export const GameProvider = ({ children }) => {
   const SetActivePlayer = (playerId) => {
     setActivePlayerId(playerId);
     handleSendGameStatus({ type: 'activePlayer', activePlayerId: playerId });
+
+   /* var myPlayerDeckOnHand = [...myPlayerDeckOnHand];
+    setMyPlayerDeckDiscard([...myPlayerDeckOnHand].push(myPlayerDeckOnHand))
+
+   var draw = [...myPlayerDeckDraw];
+
+    setMyPlayerDeckDraw([...draw].slice(5, draw.length - 5));*/
+
+    setMyPlayerDeckOnHand([...myPlayerDeckDraw].slice(0,5));
+    setMyPlayerDeckDraw([...myPlayerDeckDraw].slice(5));
+
   }
 
 
+  
   const value = {
 
     gameUsers,
@@ -91,7 +114,10 @@ export const GameProvider = ({ children }) => {
     activePlayerId,
     setActivePlayerId,
     mapData,
-    strongholdPositions
+    strongholdPositions,
+
+    myPlayerDeck,
+    myPlayerDeckOnHand
   };
 
 

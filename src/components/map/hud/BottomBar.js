@@ -1,78 +1,70 @@
 import React, { useState } from 'react';
-import { Library, History, Swords, Flame, Castle } from 'lucide-react';
+import { Library, History, Swords, Flame, Map as MapIcon, Zap, Coins } from 'lucide-react';
 import './css/BottomBar.css';
-import Card from './Card';
+import { useGameContext } from '../../../contexts/GameContext';
+
+// Eksik olan ikon belirleme fonksiyonu
+const getCardIcon = (type) => {
+  switch (type) {
+    case 'Military': return <Swords size={40} />;
+    case 'Economy': return <Coins size={40} />;
+    case 'Terrain': return <MapIcon size={40} />;
+    case 'Magic': return <Zap size={40} />;
+    default: return <Flame size={40} />;
+  }
+};
 
 const BottomBar = () => {
+  const { myPlayerDeckOnHand } = useGameContext();
   const [showDeck, setShowDeck] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
 
-  const hand = [
-    { id: 1, name: "Gümüş Şövalye", cost: 3, type: "unit", icon: <Swords /> },
-    { id: 2, name: "Meteor Yağmuru", cost: 5, type: "spell", icon: <Flame /> },
-    { id: 3, name: "Gözcü Kulesi", cost: 2, type: "structure", icon: <Castle /> },
-    { id: 4, name: "Kutsal Işık", cost: 1, type: "spell", icon: <Flame /> },
-    { id: 5, name: "Balista", cost: 4, type: "unit", icon: <Swords /> },
-  ];
-
-  const deckPreview = [
-    { name: "Mızrakçı", count: 2 },
-    { name: "Şifa İksiri", count: 1 },
-    { name: "Kuşatma", count: 1 },
-  ];
-
-  const historyPreview = [
-    { name: "Süvari Baskını", turn: "3. Tur" },
-    { name: "Okçu Atışı", turn: "2. Tur" },
-  ];
-
   return (
     <div className="hud-bottom-bar">
-
-     {/* SOL: Kalan Deste Konteynırı */}
-      <div 
-        className="hud-icon-container"
-        data-label="DESTE"
-        onMouseEnter={() => setShowDeck(true)}
-        onMouseLeave={() => setShowDeck(false)}
-      >
-        <Library size={36} />
-        {showDeck && (
-          <div className="preview-panel left-preview">
-            <h4>KALAN ORDU</h4>
-            <ul>
-              <li><span>Mızrakçı</span> <span>x2</span></li>
-              <li><span>Şifa</span> <span>x1</span></li>
-            </ul>
-          </div>
-        )}
+      {/* SOL BUTON */}
+      <div className="hud-icon-container left-btn" onMouseEnter={() => setShowDeck(true)} onMouseLeave={() => setShowDeck(false)}>
+        <Library size={30} />
+        <span className="icon-label">DESTE</span>
+        {showDeck && <div className="preview-panel left-preview"><h4>KALAN ORDU</h4><ul><li>Askeri x12</li></ul></div>}
       </div>
 
-      {/* ORTA: Elindeki Kartlar */}
+      {/* KARTLAR */}
       <div className="hand-container">
-        {hand.map((card) => (
-          <Card card={card} />
+        {myPlayerDeckOnHand && myPlayerDeckOnHand.slice(0, 5).map((card) => (
+          <div key={card.id} className={`game-card ${card.type.toLowerCase()}`}>
+
+            {/* Sol Üst AP */}
+            <div className="card-cost-cyan">{card.apCost}</div>
+
+            {/* Üst Görsel */}
+            <div className="card-image-section">
+              {getCardIcon(card.type)}
+            </div>
+
+            {/* Tip Banner */}
+            <div className="card-type-banner">
+              {card.type}
+            </div>
+
+            {/* Açıklama */}
+            <div className="card-desc-section">
+              <p>{card.description}</p>
+            </div>
+
+            {/* Alt İsim */}
+            <div className="card-footer-title">
+              {card.name}
+            </div>
+          </div>
         ))}
       </div>
 
-     {/* SAĞ: Kullanılan Kartlar Konteynırı */}
-      <div 
-        className="hud-icon-container"
-        data-label="GEÇMİŞ"
-        onMouseEnter={() => setShowHistory(true)}
-        onMouseLeave={() => setShowHistory(false)}
-      >
-        <History size={36} />
-        {showHistory && (
-          <div className="preview-panel right-preview">
-            <h4>GEÇMİŞ HAMLELER</h4>
-            <ul>
-              <li><span>Okçu Atışı</span> <span style={{fontSize:'0.7rem'}}>T3</span></li>
-            </ul>
-          </div>
-        )}
+      {/* SAĞ BUTON */}
+      <div className="hud-icon-container right-btn" onMouseEnter={() => setShowHistory(true)} onMouseLeave={() => setShowHistory(false)}>
+        <History size={30} />
+        <span className="icon-label">GEÇMİŞ</span>
+        {showHistory && <div className="preview-panel right-preview"><h4>GEÇMİŞ</h4><ul><li>Hamle 1</li></ul></div>}
       </div>
-
     </div>
   );
 };

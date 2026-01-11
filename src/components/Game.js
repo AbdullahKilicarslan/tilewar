@@ -24,19 +24,19 @@ export default function Game() {
     StartGame([{
       id: 'host',
       name: 'Veriziazam İsmail',
-      deck: 'deste',
+      deck: '1',
       ready: true,
       color: 'renk'
     }, {
       id: 'host2',
       name: 'Taçsız Kral Mustafa',
-      deck: 'deste',
+      deck: '1',
       ready: true,
       color: 'renk'
     }, {
       id: 'host3',
       name: 'Yeni Çeri Abdullah',
-      deck: 'deste',
+      deck: '1',
       ready: true,
       color: 'renk'
     }
