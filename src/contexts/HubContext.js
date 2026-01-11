@@ -30,6 +30,7 @@ export const HubProvider = ({ children }) => {
   //useEffect(() => { setMyPeerId(selfId); }, [selfId]);
 
   const [activePlayerIdHub, setActivePlayerIdHub] = useState('');
+  const [strongholdPositionsHub, setStrongholdPositionsHub] = useState([]);
 
 
   const generateGuid = () => {
@@ -91,6 +92,9 @@ export const HubProvider = ({ children }) => {
       if (data.type === 'activePlayer') {
         setActivePlayerIdHub(data);
       }
+      if (data.type === 'StrongholdPositions') {
+        setStrongholdPositionsHub(data);
+      }
     });
 
     // 3. Yeni bir eş (peer) bağlandığında veya ayrıldığında
@@ -146,7 +150,8 @@ export const HubProvider = ({ children }) => {
     myPeerId,
 
 
-    activePlayerIdHub
+    activePlayerIdHub,
+    strongholdPositionsHub
   };
 
   return (

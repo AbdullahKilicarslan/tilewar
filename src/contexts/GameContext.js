@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useHubContext } from './HubContext';
+import  generalTools  from '../tools/generalTools';
 
 // Context oluştur
 const GameContext = createContext();
@@ -15,7 +16,7 @@ export const useGameContext = () => {
 
 // Provider component
 export const GameProvider = ({ children }) => {
-  const { users, handleSendGameStatus, activePlayerIdHub } = useHubContext();
+  const { users, handleSendGameStatus, activePlayerIdHub ,strongholdPositionsHub} = useHubContext();
 
 
   const [gameUsers, setGameUsers] = useState([]);
@@ -25,17 +26,17 @@ export const GameProvider = ({ children }) => {
 
   const [tourCount, setTourCount] = useState(1);
 
+  const [strongholdPositions, setStrongholdPositions] = useState([]);
 
   useEffect(() => {
-    console.log("GameContext: activePlayerIdHub değişti:", activePlayerIdHub);
-    console.log("GameContext: activePlayerId değişti:", activePlayerId);
-
     setActivePlayerId(activePlayerIdHub.activePlayerId);
+  }, [activePlayerIdHub]); 
 
-  }, [activePlayerIdHub]); // activePlayerId'yi eklemek takibi kolaylaştırır
+   useEffect(() => {
+    setStrongholdPositions(strongholdPositionsHub.strongholdPositions);
+  }, [strongholdPositionsHub]); 
 
   const StartGame = (hostUser) => {
-    console.log('Game Starting with users:', users, 'and hostUser:', hostUser);
     const sortedUsers = [...users, ...hostUser].sort((a, b) => {
       if (a.id < b.id) return -1;
       if (a.id > b.id) return 1;
@@ -45,6 +46,11 @@ export const GameProvider = ({ children }) => {
     setMyPlayerId(hostUser[0].id);
     setMyPlayerName(hostUser[0].name);
     setActivePlayerId(sortedUsers[0].id);
+
+    let sp = generalTools.shuffleArray(strongholdPositions).slice(0, sortedUsers.length)
+    setStrongholdPositions(sp);
+    handleSendGameStatus({ type: 'strongholdPositions',strongholdPositions: sp });
+
   }
 
   const SetActivePlayer = (playerId) => {
@@ -65,7 +71,8 @@ export const GameProvider = ({ children }) => {
 
     SetActivePlayer,
     activePlayerId,
-    setActivePlayerId
+    setActivePlayerId,
+    setStrongholdPositions
   };
 
 

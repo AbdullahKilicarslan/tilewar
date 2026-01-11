@@ -6,80 +6,25 @@ import { Sky, OrbitControls, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 
 import { useAppContext } from '../../contexts/AppContext';
+import { useGameContext } from '../../contexts/GameContext';
 
-/* Model Imports */
-import { CoinPouch } from '../model/coinpouch';
-import { Castle } from './../model/castle';
 
 /* HUD Imports */
 import { HudContainer } from './hud/HudContainer';
 
 
-function Hexagon({ position, color, height, emissiveIntensity, type }) {
-  const [hovered, setHovered] = React.useState(false);
+/* */
+import Hexagon from './subComponents/Hexagon';
 
-  const baseColor = color === 'gold' ? '#d4af37' : color;
-  const isSpecial = type === 'gold' || type === 'stronghold';
-
-  return (
-    <group position={position}>
-      {/* Altın kesesi varsa, etkileşimi engellememesi için mesh dışında tutuyoruz */}
-      {type === 'gold' && (
-        <CoinPouch position={[0, height / 2 + 0.5, 0]} scale={0.2} speed={2} />
-      )}
-
-      {type === 'stronghold' && (
-        <Castle position={[0, height / 2, 0]} scale={0.7} speed={2} />
-      )}
-      <mesh rotation={[Math.PI, 0, 0]} castShadow receiveShadow
-        onPointerEnter={(e) => {
-          e.stopPropagation();
-          setHovered(true);
-        }}
-        onPointerLeave={(e) => {
-          setHovered(false);
-        }}
-      >
-        <cylinderGeometry args={[1, 1, height, 6]} />
-
-        {/* Yanlar */}
-        <meshStandardMaterial attach="material-0" color={baseColor} metalness={0.5} roughness={0.7} />
-
-        {/* Alt */}
-        <meshStandardMaterial attach="material-1" color="#050505" />
-
-        {/* ÜST KAPAK - Hover burada işlenir */}
-        <meshStandardMaterial
-          attach="material-2"
-          color={hovered ? "#ffffff" : baseColor}
-          metalness={isSpecial ? 1 : 0.3}
-          roughness={isSpecial ? 0.1 : 0.4}
-          emissive={hovered ? "#ffffff" : baseColor}
-          emissiveIntensity={hovered ? 0.5 : (isSpecial ? 0.8 : 0.1)}
-        />
-      </mesh>
-
-      {/* Görsel Seçim Çerçevesi (Opsiyonel ama kararlılık sağlar) */}
-
-      <lineSegments rotation={[Math.PI, 0, 0]}>
-        <edgesGeometry args={[new THREE.CylinderGeometry(1, 1, height, 6)]} />
-        <lineBasicMaterial color="#8b8b1c" transparent opacity={0.4} linewidth={0.01} />
-      </lineSegments>
-
-
-      {/* Işıklar */}
-      {isSpecial && (
-        <pointLight position={[0, height / 2 + 0.5, 0]} intensity={hovered ? 3 : 1.5} color={baseColor} />
-      )}
-    </group>
-  );
-}
 
 
 
 export default function GameMap() {
 
   const { data, trigger } = useAppContext();
+  const { strongholdPositions,setStrongholdPositions } = useGameContext();
+
+
   // Yardımcı fonksiyon: Rengi rastgele küçük bir oranda değiştirir
   const getVariantColor = (hex, amount = 10) => {
     // HEX'i RGB'ye çevir
@@ -99,7 +44,7 @@ export default function GameMap() {
   };
 
   const myFunction = () => {
-   // console.log('Component2 fonksiyonu çalıştı!');
+    // console.log('Component2 fonksiyonu çalıştı!');
   };
   useEffect(() => {
 
@@ -108,14 +53,17 @@ export default function GameMap() {
   }, [trigger]);
 
 
+
   const hexSize = 1;
   const xSpacing = Math.sqrt(3) * hexSize;
   const zSpacing = 1.5 * hexSize;
 
   const cells = useMemo(() => {
+    let strongholds = [];
     const temp = [];
     const mapRadius = 6;
     const centerRow = 6;
+
 
     for (let r = 0; r <= 12; r++) {
       const rowWidth = 18 - Math.abs(centerRow - r);
@@ -141,6 +89,9 @@ export default function GameMap() {
           type = 'stronghold';
         }
 
+        if (cc == '#8b0000')
+          strongholds.push({ r, c });
+
         // Altın Madeni
         const rand = Math.random();
         if (rand > 0.95) {
@@ -163,6 +114,7 @@ export default function GameMap() {
         });
       }
     }
+    setStrongholdPositions(strongholds);
     return temp;
   }, [xSpacing, zSpacing]);
 
@@ -182,7 +134,7 @@ export default function GameMap() {
   return (
     <div style={{ width: '100vw', height: '100vh', overflow: 'hidden', position: 'relative' }}>
       {/* HUD Bileşeni */}
-     <HudContainer></HudContainer>
+      <HudContainer></HudContainer>
       <Canvas shadows
         camera={{ position: [10, 10, 40], fov: 60, far: 1000 }}
         raycaster={{ params: { Line: { threshold: 0.15 } } }}>
