@@ -2,33 +2,36 @@
 
 :root {
   --gold: #d4af37;
+  --gold-bright: #f1c40f;
   --cyan-ap: #00ced1;
-  /* Tip Renkleri */
   --military-color: #e74c3c;
   --economy-color: #f1c40f;
   --terrain-color: #2ecc71;
   --magic-color: #9b59b6;
 }
 
+/* ANA KONTEYNIR */
 .hud-bottom-bar {
   position: fixed;
   bottom: 0;
+  left: 0;
   width: 100%;
-  height: 280px;
-  background: linear-gradient(to top, #000 30%, transparent);
+  height: 0px;
+  background: linear-gradient(to top, rgba(0,0,0,1) 40%, transparent 100%);
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  padding-bottom: 20px;
-  z-index: 9999; /* En üstte görünmesi için yükseltildi */
+  padding-bottom: 25px;
+  z-index: 9999;
 }
 
+/* KARTLAR */
 .hand-container {
   display: flex;
   gap: 12px;
+  perspective: 1200px;
 }
 
-/* GENEL KART YAPISI */
 .game-card {
   width: 165px;
   height: 245px;
@@ -38,31 +41,29 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-  /* Varsayılan Çerçeve */
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
   border: 2px solid var(--gold);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.8);
 }
 
-/* DİNAMİK ÇERÇEVE VE IŞIMA RENKLERİ */
+/* DİNAMİK RENKLER */
 .game-card.military { border-color: var(--military-color); --type-glow: var(--military-color); }
 .game-card.economy { border-color: var(--economy-color); --type-glow: var(--economy-color); }
 .game-card.terrain { border-color: var(--terrain-color); --type-glow: var(--terrain-color); }
 .game-card.magic { border-color: var(--magic-color); --type-glow: var(--magic-color); }
 
 .game-card:hover {
-  transform: translateY(-35px) scale(1.05);
-  box-shadow: 0 15px 40px var(--type-glow); /* Kendi renginde parlar */
-  z-index: 100;
+  transform: translateY(-45px) scale(1.1);
+  box-shadow: 0 15px 45px var(--type-glow);
+  z-index: 99999999;
 }
 
-/* TURKUAZ AP (Sol Üst) */
 .card-cost-cyan {
   position: absolute;
-  top: 5px;
-  left: 5px;
-  width: 40px;
-  height: 40px;
+  top: 6px;
+  left: 6px;
+  width: 38px;
+  height: 38px;
   background: radial-gradient(circle, var(--cyan-ap), #008b8b);
   border: 2px solid #fff;
   border-radius: 50%;
@@ -74,20 +75,17 @@
   font-weight: bold;
   font-size: 1.1rem;
   z-index: 20;
-  box-shadow: 0 0 10px rgba(0,206,209,0.6);
 }
 
-/* ÜST GÖRSEL KISMI */
 .card-image-section {
   height: 85px;
   background: rgba(255,255,255,0.03);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--type-glow); /* İkon da kartın tip renginde parlar */
+  color: var(--type-glow);
 }
 
-/* TİP BANNER */
 .card-type-banner {
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
   text-align: center;
@@ -97,38 +95,32 @@
   color: #fff;
   text-transform: uppercase;
   letter-spacing: 2px;
-  border-top: 1px solid rgba(255,255,255,0.1);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
-/* AÇIKLAMA ALANI (Net Okunurluk) */
 .card-desc-section {
   flex: 1;
   padding: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.6);
 }
 
 .card-desc-section p {
   font-family: 'MedievalSharp', cursive;
   font-size: 0.85rem;
-  color: #f2e3bc; /* Parşömen rengi yazı */
+  color: #f2e3bc;
   text-align: center;
-  line-height: 1.3;
   margin: 0;
 }
 
-/* EN ALT İSİM ALANI */
 .card-footer-title {
-  background: #1a1a1a;
-  padding: 10px 0;
+  background: #151515;
+  padding: 8px 0;
   text-align: center;
   font-family: 'Cinzel Decorative', serif;
   font-size: 0.75rem;
   color: #fff;
-  border-top: 1px solid rgba(255,255,255,0.1);
 }
 
 /* YAN BUTONLAR */
@@ -140,9 +132,246 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: 0.2s;
 }
+
 .left-btn { left: 40px; }
 .right-btn { right: 40px; }
-.hud-icon-container:hover { transform: scale(1.1); color: #fff; }
-.icon-label { font-size: 0.6rem; margin-top: 5px; font-family: 'Cinzel Decorative'; }
+
+/* ÖNİZLEME PANELLERİ - TAŞMA DÜZELTİLDİ */
+.preview-panel {
+  position: fixed; /* Absolute yerine Fixed yaparak ekran kenarına sabitledik */
+  bottom: 100px;
+  width: 210px;
+  background: rgba(10, 10, 10, 0.98);
+  border: 2px solid var(--gold);
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.9);
+  backdrop-filter: blur(10px);
+  z-index: 99999999;
+}
+
+.left-preview { left: 20px; z-index: 99999999; }   /* Sol kenara yapışık */
+.right-preview { right: 20px; } /* Sağ kenara yapışık */
+
+.preview-panel h4 {
+  font-family: 'Cinzel Decorative', serif;
+  color: var(--gold);
+  font-size: 0.85rem;
+  text-align: center;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  padding-bottom: 8px;
+}
+
+.grouped-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 5px;
+  
+  /* Scrollbar'ı Gizle (Modern Tarayıcılar) */
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+}
+
+/* Scrollbar'ı Gizle (Chrome, Safari, Edge) */
+.grouped-list-container::-webkit-scrollbar {
+  display: none;
+}
+
+.group-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  border-left: 4px solid transparent;
+}
+
+.group-item.military { border-left-color: var(--military-color); }
+.group-item.economy { border-left-color: var(--economy-color); }
+.group-item.terrain { border-left-color: var(--terrain-color); }
+.group-item.magic { border-left-color: var(--magic-color); }
+
+.group-name {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 0.85rem;
+  color: #eee;
+  flex: 1;
+}
+
+.group-count {
+  font-family: 'Cinzel Decorative', serif;
+  color: var(--gold);
+  font-weight: bold;
+}
+
+/* Mevcut CSS'in altına ekle */
+
+.fullscreen-card-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(15px);
+  z-index: 200000;
+  display: flex;
+  flex-direction: column;
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: scale(1.1); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 40px 60px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.modal-header h2 {
+  font-family: 'Cinzel Decorative', serif;
+  color: var(--gold);
+  font-size: 2.5rem;
+  letter-spacing: 4px;
+  text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  color: var(--gold);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.close-modal-btn:hover {
+  transform: rotate(90deg) scale(1.2);
+  color: #fff;
+}
+
+.modal-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 60px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Modal İçindeki Kart Dizilimi (Grid) */
+.modal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 30px;
+  width: 100%;
+  max-width: 1400px;
+  justify-items: center;
+}
+
+/* Modal içindeki kartların hover efekti (Alttaki barla karışmasın diye sabit kalabilir) */
+.modal-grid .game-card:hover {
+  transform: translateY(-10px) scale(1.05);
+}
+
+.empty-msg {
+  grid-column: 1 / -1;
+  font-family: 'MedievalSharp', cursive;
+  color: #666;
+  font-size: 1.5rem;
+  margin-top: 100px;
+}
+
+/* Hover ile önizleme panelini kaldırdık, tıklama aktif */
+.hud-icon-container:hover {
+  color: #fff;
+  transform: scale(1.1);
+  text-shadow: 0 0 10px var(--gold);
+}
+
+/* Önceki BottomBar.css içeriğini koruyun ve aşağıdakileri ekleyin/güncelleyin */
+
+.click-hint {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 0.7rem;
+  color: var(--gold);
+  text-align: center;
+  margin-top: 10px;
+  opacity: 0.7;
+  letter-spacing: 1px;
+}
+
+/* FULLSCREEN MODAL */
+.fullscreen-card-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(5, 5, 5, 0.96);
+  backdrop-filter: blur(20px);
+  z-index: 200000;
+  display: flex;
+  flex-direction: column;
+  animation: modalFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 60px;
+  background: linear-gradient(to bottom, rgba(212, 175, 55, 0.1), transparent);
+}
+
+.modal-header h2 {
+  font-family: 'Cinzel Decorative', serif;
+  color: var(--gold);
+  font-size: 2rem;
+  letter-spacing: 3px;
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  color: var(--gold);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.close-modal-btn:hover {
+  transform: rotate(90deg);
+  color: #fff;
+}
+
+.modal-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 40px;
+}
+
+.modal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Modal İçindeki Kartlar İçin Sabitleme */
+.modal-grid .game-card:hover {
+  transform: translateY(-15px) scale(1.05);
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

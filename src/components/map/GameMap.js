@@ -14,13 +14,22 @@ import { HudContainer } from './hud/HudContainer';
 
 /* */
 import Hexagon from './subComponents/Hexagon';
+import Unit from './subComponents/Unit';
+
 
 
 
 
 export default function GameMap() {
 
-  const { mapData } = useGameContext();
+  const { mapData, unitData } = useGameContext();
+
+  const [ unitDataLocal, setUnitDataLocal ] = useState([]);
+
+
+  useEffect(() => {
+    setUnitDataLocal(unitData);
+  }, [unitData]);
 
   const center = useMemo(() => {
     if (!mapData || mapData.length === 0) return [0, 0, 0];
@@ -47,9 +56,12 @@ export default function GameMap() {
         <Sky sunPosition={[-100, 10, -100]} distance={450000} inclination={0.6} azimuth={0.1} />
 
         {mapData && mapData.map((cell) => (
-          <Hexagon key={cell.id} hexKey={cell.id} type={cell.type} position={cell.position} texturePath={cell.tex} height={cell.height} color={cell.color} emissiveIntensity={cell.emissiveIntensity} />
+          <Hexagon key={cell.id} {...cell} />
         ))}
 
+        {unitDataLocal && unitDataLocal.map((unit) => (
+          <Unit key={unit.id} {...unit} ></Unit>
+        ))}
         <OrbitControls target={center} makeDefault enablePan={false} maxPolarAngle={Math.PI / 2.1} maxDistance={50} minDistance={5} />
       </Canvas>
 

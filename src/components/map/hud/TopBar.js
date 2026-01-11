@@ -10,8 +10,8 @@ const TopBar = () => {
   const resources = [
     { label: 'ALTIN', val: 1250, inc: 45, icon: <Coins />, cls: 'gold-res' },
     { label: 'GIDA', val: 450, inc: 12, icon: <Apple />, cls: 'food-res' },
-    { label: 'İŞÇİ', val: 24, inc: 2, icon: <Users />, cls: 'work-res' },
-    { label: 'BİRLİK', val: 120, inc: 0, icon: <Shield />, cls: 'sold-res' },
+   // { label: 'İŞÇİ', val: 24, inc: 2, icon: <Users />, cls: 'work-res' },
+    //{ label: 'BİRLİK', val: 120, inc: 0, icon: <Shield />, cls: 'sold-res' },
     { label: 'TEKNOLOJİ', val: 85, inc: 5, icon: <Cpu />, cls: 'tech-res' }
   ];
 

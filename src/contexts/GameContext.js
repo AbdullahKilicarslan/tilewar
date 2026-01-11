@@ -35,6 +35,7 @@ export const GameProvider = ({ children }) => {
   const [strongholdPositions, setStrongholdPositions] = useState([]);
   const [mapData, setMapData] = useState(null);
 
+  const [unitData, setUnitData] = useState([]);
 
   useEffect(() => {
     if (mapDataHub) {
@@ -93,8 +94,11 @@ export const GameProvider = ({ children }) => {
 
     setMyPlayerDeckDraw([...draw].slice(5, draw.length - 5));*/
 
+    setMyPlayerDeckDiscard((prev) => [...prev, ...myPlayerDeckOnHand, ]);
+
     setMyPlayerDeckOnHand([...myPlayerDeckDraw].slice(0,5));
     setMyPlayerDeckDraw([...myPlayerDeckDraw].slice(5));
+
 
   }
 
@@ -117,7 +121,13 @@ export const GameProvider = ({ children }) => {
     strongholdPositions,
 
     myPlayerDeck,
-    myPlayerDeckOnHand
+    myPlayerDeckOnHand,
+    myPlayerDeckDraw,
+    myPlayerDeckDiscard,
+
+
+    unitData,
+    setUnitData
   };
 
 
