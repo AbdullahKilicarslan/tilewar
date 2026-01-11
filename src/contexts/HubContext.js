@@ -31,6 +31,7 @@ export const HubProvider = ({ children }) => {
 
   const [activePlayerIdHub, setActivePlayerIdHub] = useState('');
   const [strongholdPositionsHub, setStrongholdPositionsHub] = useState([]);
+  const [mapDataHub, setMapDataHub] = useState(null);
 
 
   const generateGuid = () => {
@@ -92,8 +93,11 @@ export const HubProvider = ({ children }) => {
       if (data.type === 'activePlayer') {
         setActivePlayerIdHub(data);
       }
-      if (data.type === 'StrongholdPositions') {
+      if (data.type === 'strongholdPositions') {
         setStrongholdPositionsHub(data);
+      }
+       if (data.type === 'map') {
+        setMapDataHub(data);
       }
     });
 
@@ -151,7 +155,8 @@ export const HubProvider = ({ children }) => {
 
 
     activePlayerIdHub,
-    strongholdPositionsHub
+    strongholdPositionsHub,
+    mapDataHub
   };
 
   return (

@@ -5,6 +5,7 @@ import './css/LobbyScreen.css';
 import { useScreenContext } from '../../contexts/ScreenContext';
 import { useHubContext } from '../../contexts/HubContext';
 import { useGameContext } from '../../contexts/GameContext';
+import mapGenerate from '../map/tools/mapGenerate';
 
 const LobbyScreen = () => {
     const { OpenMapScreen, isHost } = useScreenContext();
@@ -38,6 +39,8 @@ const LobbyScreen = () => {
     ];
 
     useEffect(() => {
+        var map =hostMapScreen?mapGenerate.generateMapByName("Map"+selectedMap):null;
+       
         if (clientMapScreen || hostMapScreen) //eğer client  ve host ekran açıldıysa 
         {
             OpenMapScreen(); //Oyuncularda ekran açılacak.
@@ -48,7 +51,7 @@ const LobbyScreen = () => {
                 deck: selectedDeck,
                 ready: isReady,
                 color: selectedColor
-            }]);
+            }],map);
         }
     }, [clientMapScreen,hostMapScreen]);
 

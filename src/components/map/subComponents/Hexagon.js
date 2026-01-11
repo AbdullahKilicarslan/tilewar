@@ -5,16 +5,24 @@ import * as THREE from 'three'
 /* Model Imports */
 import { CoinPouch } from '../../model/coinpouch';
 import { Castle } from './../../model/castle';
+import { useGameContext } from '../../../contexts/GameContext';
 
 
 
- 
-const Hexagon = ({ position, color, height, emissiveIntensity, type }) => {
+
+const Hexagon = ({ hexKey, position, color, height, emissiveIntensity, type }) => {
+
+    const { strongholdPositions } = useGameContext();
+
+
+
     const [hovered, setHovered] = React.useState(false);
 
     const baseColor = color === 'gold' ? '#d4af37' : color;
     const isSpecial = type === 'gold' || type === 'stronghold';
 
+        const stronghold = strongholdPositions?.find(x => hexKey === `hex-${x.r}-${x.c}`);
+        const strongcolor = stronghold?.color || 'white';
     return (
         <group position={position}>
             {/* Altın kesesi varsa, etkileşimi engellememesi için mesh dışında tutuyoruz */}
@@ -22,9 +30,8 @@ const Hexagon = ({ position, color, height, emissiveIntensity, type }) => {
                 <CoinPouch position={[0, height / 2 + 0.5, 0]} scale={0.2} speed={2} />
             )}
 
-            {type === 'stronghold' && (
-                <Castle position={[0, height / 2, 0]} scale={0.7} speed={2} />
-            )}
+            {stronghold && <Castle position={[0, height / 2, 0]} scale={0.7} speed={2} customColor={strongcolor}/>}
+
             <mesh rotation={[Math.PI, 0, 0]} castShadow receiveShadow
                 onPointerEnter={(e) => {
                     e.stopPropagation();

@@ -15,25 +15,39 @@ export function Castle(props) {
           receiveShadow
           geometry={nodes.Wonder_SecondAge_Level3_1.geometry}
           material={materials.Stone}
-        />
+        >
+
+
+        </mesh>
         <mesh
           castShadow
           receiveShadow
           geometry={nodes.Wonder_SecondAge_Level3_2.geometry}
           material={materials.Stone_Light}
-        />
+        >
+
+        </mesh>
         <mesh
           castShadow
           receiveShadow
           geometry={nodes.Wonder_SecondAge_Level3_3.geometry}
           material={materials.Wood}
-        />
+        >
+
+                    <meshStandardMaterial color={props.customColor} />
+
+        </mesh>
+
         <mesh
           castShadow
           receiveShadow
           geometry={nodes.Wonder_SecondAge_Level3_4.geometry}
           material={materials.Main}
-        />
+         >
+          <meshStandardMaterial color={props.customColor} />
+
+
+        </mesh>
       </group>
     </group>
   )

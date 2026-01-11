@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useHubContext } from './HubContext';
-import  generalTools  from '../tools/generalTools';
+import generalTools from '../tools/generalTools';
 
 // Context oluştur
 const GameContext = createContext();
@@ -16,7 +16,7 @@ export const useGameContext = () => {
 
 // Provider component
 export const GameProvider = ({ children }) => {
-  const { users, handleSendGameStatus, activePlayerIdHub ,strongholdPositionsHub} = useHubContext();
+  const { users, handleSendGameStatus, activePlayerIdHub, strongholdPositionsHub, mapDataHub } = useHubContext();
 
 
   const [gameUsers, setGameUsers] = useState([]);
@@ -27,16 +27,24 @@ export const GameProvider = ({ children }) => {
   const [tourCount, setTourCount] = useState(1);
 
   const [strongholdPositions, setStrongholdPositions] = useState([]);
+  const [mapData, setMapData] = useState(null);
+
+
+  useEffect(() => {
+    if (mapDataHub)
+      setMapData(mapDataHub.map);
+  }, [mapDataHub]);
 
   useEffect(() => {
     setActivePlayerId(activePlayerIdHub.activePlayerId);
-  }, [activePlayerIdHub]); 
+  }, [activePlayerIdHub]);
 
-   useEffect(() => {
-    setStrongholdPositions(strongholdPositionsHub.strongholdPositions);
-  }, [strongholdPositionsHub]); 
+  useEffect(() => {
+    if (strongholdPositionsHub)
+      setStrongholdPositions(strongholdPositionsHub.strongholdPositions);
+  }, [strongholdPositionsHub]);
 
-  const StartGame = (hostUser) => {
+  const StartGame = (hostUser, map) => {
     const sortedUsers = [...users, ...hostUser].sort((a, b) => {
       if (a.id < b.id) return -1;
       if (a.id > b.id) return 1;
@@ -47,9 +55,19 @@ export const GameProvider = ({ children }) => {
     setMyPlayerName(hostUser[0].name);
     setActivePlayerId(sortedUsers[0].id);
 
-    let sp = generalTools.shuffleArray(strongholdPositions).slice(0, sortedUsers.length)
-    setStrongholdPositions(sp);
-    handleSendGameStatus({ type: 'strongholdPositions',strongholdPositions: sp });
+    if (map) {
+      //sadece host yaacak
+      let sp = generalTools.shuffleArray(map.strongholds).slice(0, sortedUsers.length)
+      for (let i = 0; i < sp.length; i++) {
+        sp[i].peerId = sortedUsers[i].id;
+        sp[i].color = sortedUsers[i].color;
+      }
+      setStrongholdPositions(sp);
+      handleSendGameStatus({ type: 'strongholdPositions', strongholdPositions: sp });
+
+      setMapData(map.map);
+      handleSendGameStatus({ type: 'map', map: map.map });
+    }
 
   }
 
@@ -72,7 +90,8 @@ export const GameProvider = ({ children }) => {
     SetActivePlayer,
     activePlayerId,
     setActivePlayerId,
-    setStrongholdPositions
+    mapData,
+    strongholdPositions
   };
 
 

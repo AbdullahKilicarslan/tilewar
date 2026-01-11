@@ -15,17 +15,21 @@ const HostScreen = () => {
     const [connectPeer, setConnectPeer] = useState(false);
     const [copied, setCopied] = useState(false);
 
+    useEffect(() => {
+        setTimeout(() => handleHostClick(), 100);
+    }, []);  
+
+
     const handleHostClick = () => {
         connectRoom();
     }
     useEffect(() => {
         copyId();
     }, [hostId]);
-    
+
     const copyId = () => {
         navigator.clipboard.writeText(hostId);
         setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
     };
     const handleLobyClick = () => {
         OpenLobbyScreen();

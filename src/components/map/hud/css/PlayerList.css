@@ -9,11 +9,11 @@
   flex-direction: column;
   gap: 12px;
   z-index: 1200;
-  pointer-events: none;
+  pointer-events: none; /* Altındaki haritaya tıklanabilsin */
 }
 
 .player-list-wrapper > * {
-  pointer-events: auto;
+  pointer-events: auto; /* Kartların kendisi tıklanabilir olsun */
 }
 
 /* Oyuncu Kartı */
@@ -22,36 +22,35 @@
   background: rgba(26, 15, 10, 0.8);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(212, 175, 55, 0.3);
-  border-radius: 15px 15px 15px 15px; /* Sağ köşeler oval */
+  border-left: 4px solid transparent; /* JS'den gelen dinamik renk buraya yansır */
+  border-radius: 8px; 
   padding: 10px 15px;
   display: flex;
   align-items: center;
   gap: 12px;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
-  left: -10px; /* Normalde biraz içeride dursun */
+  left: 0;
 }
 
 /* Aktif Oyuncu Efekti */
 .player-list-item.active {
-  left: 0; /* Dışarı fırlar */
-  width: 200px;
+  left: -10px; /* Aktif olduğunda sola (içeri doğru) hafif kayar */
+  width: 215px;
   background: rgba(43, 24, 16, 0.95);
-  border-color: var(--gold);
-  border-width: 2px;
-  box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+  border-color: rgba(212, 175, 55, 0.6);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
 /* Aktiflik Belirteci (Parlayan Nokta) */
 .active-indicator {
   position: absolute;
-  left: -5px;
-  width: 10px;
-  height: 10px;
-  background: var(--gold);
+  left: -8px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  box-shadow: 0 0 10px var(--gold);
-  display: none;
+  display: none; /* Sadece aktifken görünür */
+  border: 2px solid #1a0f0a;
 }
 
 .player-list-item.active .active-indicator {
@@ -60,20 +59,20 @@
 
 /* Profil İkonu / Avatar alanı */
 .player-avatar {
-  width: 35px;
-  height: 35px;
+  width: 38px;
+  height: 38px;
   background: #1a0f0a;
-  border: 1px solid rgba(212, 175, 55, 0.5);
+  border: 2px solid transparent;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--gold);
+  transition: all 0.3s ease;
 }
 
-.player-list-item.active .player-avatar {
-  background: var(--gold);
-  color: #1a0f0a;
+/* İkonların görünümü */
+.player-avatar svg {
+  filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
 }
 
 /* Oyuncu Bilgileri */
@@ -85,10 +84,11 @@
 
 .p-name {
   font-family: 'MedievalSharp', cursive;
-  font-size: 0.9rem;
-  color: #f2e3bc;
+  font-size: 0.95rem;
+  color: #f2e3bc; /* Parşömen rengi */
   white-space: nowrap;
   text-overflow: ellipsis;
+  text-shadow: 1px 1px 2px #000;
 }
 
 .player-list-item.active .p-name {
@@ -98,7 +98,13 @@
 
 .p-status {
   font-family: 'Cinzel Decorative', serif;
-  font-size: 0.6rem;
-  color: rgba(212, 175, 55, 0.7);
+  font-size: 0.65rem;
+  color: rgba(212, 175, 55, 0.8);
   letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.player-list-item.active .p-status {
+  color: #fff;
+  opacity: 1;
 }

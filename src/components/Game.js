@@ -16,7 +16,7 @@ export default function Game() {
   const { gameScreen } = useAppContext();
   const { isMainMenuScreen, isHostScreen, isLobyScreen, isMapScreen, isClientScreen } = useScreenContext();
   const { StartGame } = useGameContext();
-  const isDev = true; // Geliştirme modu için true yapabilirsiniz
+  const isDev = false; // Geliştirme modu için true yapabilirsiniz
 
 
   useEffect(() => {
