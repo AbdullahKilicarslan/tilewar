@@ -3,8 +3,8 @@
 .player-list-wrapper {
   position: fixed;
   right: 20px;
-  top: 170px;
-  transform: translateY(-50%); /* Dikeyde tam ortalar */
+  top: 100px;
+  /*transform: translateY(-50%); /* Dikeyde tam ortalar */
   display: flex;
   flex-direction: column;
   gap: 12px;

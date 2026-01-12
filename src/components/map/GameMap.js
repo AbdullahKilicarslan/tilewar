@@ -56,7 +56,7 @@ export default function GameMap() {
         <Sky sunPosition={[-100, 10, -100]} distance={450000} inclination={0.6} azimuth={0.1} />
 
         {mapData && mapData.map((cell) => (
-          <Hexagon key={cell.id} {...cell} />
+          <Hexagon key={cell.id} hexKey={cell.id} {...cell} />
         ))}
 
         {unitDataLocal && unitDataLocal.map((unit) => (

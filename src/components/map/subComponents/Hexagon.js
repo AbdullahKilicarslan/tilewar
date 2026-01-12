@@ -21,6 +21,7 @@ const Hexagon = ({ hexKey, position, color, height, emissiveIntensity, type }) =
     const baseColor = color === 'gold' ? '#d4af37' : color;
     const isSpecial = type === 'gold' || type === 'stronghold';
 
+    console.log(strongholdPositions);
         const stronghold = strongholdPositions?.find(x => hexKey === `hex-${x.r}-${x.c}`);
         const strongcolor = stronghold?.color || 'white';
     return (

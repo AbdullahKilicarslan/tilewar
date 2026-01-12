@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=MedievalSharp&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Lora:ital,wght@0,400;0,700;1,400&family=Almendra:wght@700&family=MedievalSharp&display=swap');
 :root {
   --gold: #d4af37;
   --gold-bright: #f1c40f;
@@ -71,7 +70,7 @@
   align-items: center;
   justify-content: center;
   color: #fff;
-  font-family: 'Cinzel Decorative', serif;
+  font-family: 'MedievalSharp', serif;
   font-weight: bold;
   font-size: 1.1rem;
   z-index: 20;
@@ -89,8 +88,8 @@
 .card-type-banner {
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
   text-align: center;
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 0.65rem;
+  font-family: 'MedievalSharp', serif;
+  font-size: 1.5rem;
   padding: 4px 0;
   color: #fff;
   text-transform: uppercase;
@@ -101,6 +100,7 @@
   flex: 1;
   padding: 12px;
   display: flex;
+  font-size: 1.4rem;
   align-items: center;
   justify-content: center;
   background: rgba(0,0,0,0.6);
@@ -118,8 +118,8 @@
   background: #151515;
   padding: 8px 0;
   text-align: center;
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 0.75rem;
+  font-family: 'MedievalSharp', serif;
+  font-size: 1.3rem;
   color: #fff;
 }
 
@@ -155,7 +155,7 @@
 .right-preview { right: 20px; } /* Sağ kenara yapışık */
 
 .preview-panel h4 {
-  font-family: 'Cinzel Decorative', serif;
+  font-family: 'MedievalSharp', serif;
   color: var(--gold);
   font-size: 0.85rem;
   text-align: center;
@@ -204,7 +204,7 @@
 }
 
 .group-count {
-  font-family: 'Cinzel Decorative', serif;
+  font-family: 'MedievalSharp', serif;
   color: var(--gold);
   font-weight: bold;
 }
@@ -239,7 +239,7 @@
 }
 
 .modal-header h2 {
-  font-family: 'Cinzel Decorative', serif;
+  font-family: 'MedievalSharp', serif;
   color: var(--gold);
   font-size: 2.5rem;
   letter-spacing: 4px;
@@ -333,7 +333,7 @@
 }
 
 .modal-header h2 {
-  font-family: 'Cinzel Decorative', serif;
+  font-family: 'MedievalSharp', serif;
   color: var(--gold);
   font-size: 2rem;
   letter-spacing: 3px;
