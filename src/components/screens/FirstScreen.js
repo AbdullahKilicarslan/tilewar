@@ -13,7 +13,7 @@ const MainMenu = () => {
                 <div className="corner top-left"></div>
                 <div className="corner top-right"></div>
 
-                <h1 className="game-title">TILE WAR</h1>
+                <h1 className="game-title">KADİM TOPRAKLAR</h1>
                 <div className="title-underline"></div>
 
                 <div className="menu-options">
@@ -32,7 +32,7 @@ const MainMenu = () => {
                 </div>
 
                 {/* Kırmızı Mühür */}
-                <div className="wax-seal">T&W</div>
+                <div className="wax-seal">K&T</div>
             </div>
         </div>
     );

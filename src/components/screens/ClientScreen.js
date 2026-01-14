@@ -1,14 +1,12 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link2, ShieldCheck, TowerControl as Tower } from 'lucide-react';
 import './css/ClientScreen.css';
 import { useScreenContext } from '../../contexts/ScreenContext';
 import { useHubContext } from '../../contexts/HubContext';
 
 const ConnectionScreen = () => {
-    const { OpenLobbyScreen ,setIsHost} = useScreenContext();
-    const {  hostId, connectRoom  } = useHubContext();
-
-
+    const { OpenLobbyScreen, setIsHost } = useScreenContext();
+    const { hostId, connectRoom } = useHubContext();
     const [connectionId, setConnectionId] = useState('');
 
     useEffect(() => {
@@ -17,11 +15,10 @@ const ConnectionScreen = () => {
 
     const handleConnect = () => {
         if (connectionId.length > 0) {
-            if (hostId == '') {
+            if (hostId === '') {
                 alert("Sunucu bağlantısı tekrar kuruluyor, lütfen tekrar deneyin.");
-            }
-            else {
-               connectRoom(connectionId);
+            } else {
+                connectRoom(connectionId);
                 OpenLobbyScreen();
             }
         } else {
@@ -31,14 +28,16 @@ const ConnectionScreen = () => {
 
     return (
         <div className="connection-wrapper">
-            <div className="connection-card">
-                <h1 className="connection-title">TILE WAR</h1>
+            <div className="main-card shield-card">
+                <h1 className="game-title">KADİM TOPRAKLAR</h1>
+                <div className="title-underline"></div>
+                
                 <p className="connection-subtitle">Diyara Bağlanmak İçin Mührünü Bas</p>
 
                 <div className="id-input-group">
                     <label className="id-label">
-                        <Link2 size={16} style={{ verticalAlign: 'middle', marginRight: '5px' }} />
-                        DİYAR KİMLİĞİ (CONNECTION ID)
+                        <Link2 size={16} className="label-icon" />
+                        DİYAR KİMLİĞİ
                     </label>
                     <input
                         className="medieval-id-input"
@@ -49,15 +48,17 @@ const ConnectionScreen = () => {
                     />
                 </div>
 
-                <button className="connect-btn" onClick={handleConnect}>
-                    <Tower size={18} style={{ marginRight: '10px', verticalAlign: 'middle' }} />
-                    KALE KAPISINI AÇ
+                <button className="medieval-btn connect-btn-shield" onClick={handleConnect}>
+                    <Tower size={24} className="btn-icon" />
+                    <span>KALE KAPISINI AÇ</span>
                 </button>
 
-                <div style={{ marginTop: '1.5rem', opacity: 0.6, fontSize: '0.8rem' }}>
-                    <ShieldCheck size={14} style={{ verticalAlign: 'middle', marginRight: '5px' }} />
-                    Güvenli bağlantı sağlandı.
+                <div className="security-note">
+                    <ShieldCheck size={14} />
+                    <span>Güvenli bağlantı sağlandı</span>
                 </div>
+
+                <div className="wax-seal">T&W</div>
             </div>
         </div>
     );

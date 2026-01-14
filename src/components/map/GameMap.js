@@ -1,10 +1,11 @@
 import React, { useMemo, useState, useRef, useEffect, Suspense } from 'react'
-import { Canvas } from '@react-three/fiber'
+import { Canvas,useLoader } from '@react-three/fiber'
 import gsap from 'gsap'
 import { useTexture } from '@react-three/drei'
 import { Sky, OrbitControls, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 
+// 
 import { useGameContext } from '../../contexts/GameContext';
 
 
@@ -16,9 +17,21 @@ import { HudContainer } from './hud/HudContainer';
 import Hexagon from './subComponents/Hexagon';
 import Unit from './subComponents/Unit';
 
-
-
-
+function MapBackground() {
+  // Texture yüklenirken sRGB renk uzayını zorluyoruz
+  const texture = useLoader(THREE.TextureLoader, '/images/bg.png');
+  
+  useEffect(() => {
+    if (texture) {
+      texture.colorSpace = THREE.SRGBColorSpace; // Renklerin doğru görünmesi için
+      texture.needsUpdate = true;
+    }
+  }, [texture]);
+  
+  return (
+    <primitive attach="background" object={texture} />
+  );
+}
 
 export default function GameMap() {
 
@@ -51,9 +64,15 @@ export default function GameMap() {
       <Canvas shadows
         camera={{ position: [10, 10, 40], fov: 60, far: 1000 }}
         raycaster={{ params: { Line: { threshold: 0.15 } } }}>
+
+       <Suspense fallback={null}>
+          <MapBackground />
+        </Suspense>
+
+        
         <ambientLight intensity={1.5} />
         <directionalLight position={[20, 50, 20]} intensity={1} castShadow shadow-mapSize={[2048, 2048]} />
-        <Sky sunPosition={[-100, 10, -100]} distance={450000} inclination={0.6} azimuth={0.1} />
+        {/*<Sky sunPosition={[-100, 10, -100]} distance={450000} inclination={0.6} azimuth={0.1} />*/}
 
         {mapData && mapData.map((cell) => (
           <Hexagon key={cell.id} hexKey={cell.id} {...cell} />

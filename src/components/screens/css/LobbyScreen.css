@@ -1,11 +1,10 @@
 /* LobbyScreen.css */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=MedievalSharp&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
 
 .lobby-wrapper {
-  height: 100vh;
-  width: 100%;
-  background: radial-gradient(circle, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.9) 100%), 
-              url('https://images.unsplash.com/photo-1599408162165-4309312f0e0b?q=80&w=2000');
+  width: 100%; background: 
+    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), /* Üzerine koyu katman */
+    url('/public/images/bg.png') no-repeat center center fixed; /* Görsel URL'si */
   background-size: cover;
   background-position: center;
   display: flex;
@@ -26,7 +25,7 @@
 }
 
 .lobby-title {
-  font-family: 'Cinzel Decorative', serif;
+  font-family: 'MedievalSharp', serif;
   color: #f0f0f0 !important;
   text-align: center;
   font-size: 2.5rem;
@@ -176,7 +175,7 @@
   color: #1a0f0a !important;
   border: none;
   padding: 15px;
-  font-family: 'Cinzel Decorative';
+  font-family: 'MedievalSharp';
   font-size: 1.2rem;
   cursor: pointer;
   display: flex;

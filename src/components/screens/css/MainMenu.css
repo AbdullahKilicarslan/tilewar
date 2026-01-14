@@ -1,25 +1,28 @@
-/* Gelişmiş Ortaçağ UI */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=MedievalSharp&display=swap');
+/* MainMenu.css - Gelişmiş Kalkan Formu & Full Responsive */
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
 
 :root {
   --gold: #d4af37;
   --gold-bright: #f9e29b;
   --dark-wood: #2b1810;
   --fire-glow: rgba(255, 69, 0, 0.4);
+  --font-main: 'MedievalSharp', cursive;
 }
 
-/* Arka plan ve Köz Animasyonu */
+/* Arka Plan ve Köz Efekti */
 .menu-container {
-  height: 100vh;
+  min-height: 100vh;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   background: radial-gradient(circle, #2c1e1e 0%, #000 100%);
-  overflow: hidden;
   position: relative;
+  overflow: hidden;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-/* Sahte Parçacık Efekti (Overlay) */
 .menu-container::after {
   content: "";
   position: absolute;
@@ -29,118 +32,167 @@
   height: 100%;
   background-image: radial-gradient(circle, var(--fire-glow) 1px, transparent 1px);
   background-size: 50px 50px;
-  animation: embers 10s linear infinite;
+  animation: embers 15s linear infinite;
   pointer-events: none;
-}
-
-@keyframes embers {
-  from {
-    transform: translateY(0);
-  }
-
-  to {
-    transform: translateY(-1000px);
-  }
-}
-
-/* Ana Panel (Frame) */
-.main-card {
-  background: linear-gradient(135deg, #3d2b1f 0%, #1a0f0a 100%);
-  padding: 4rem;
-  border: 4px solid var(--gold);
-  border-image: linear-gradient(to bottom, #d4af37, #8b4513) 1;
-  box-shadow: 0 0 40px #000, inset 0 0 30px rgba(0, 0, 0, 0.8);
-  position: relative;
   z-index: 1;
 }
 
-/* Mühür (Wax Seal) */
-.wax-seal {
-  position: absolute;
-  bottom: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 60px;
-  background: #8b0000;
-  border-radius: 50%;
-  border: 2px solid #5e0000;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Cinzel Decorative';
-  color: #333;
-  font-weight: bold;
+/* Ana Kalkan Kartı */
+.main-card {
+  background: linear-gradient(135deg, #3d2b1f 0%, #1a0f0a 100%);
+  padding: clamp(1.5rem, 5vw, 4rem);
+  border: 4px solid var(--gold);
+  /* Altı kavisli kalkan formu */
+  border-radius: 10px 10px 120px 120px / 10px 10px 30px 30px; 
+  box-shadow: 0 0 50px #000, inset 0 0 30px rgba(0, 0, 0, 0.8);
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 650px;
+  box-sizing: border-box;
+  text-align: center;
 }
 
-/* Buton Tasarımı */
+/* Başlık ve Dekorasyon */
+.game-title {
+  font-family: var(--font-main);
+  color: #f0f0f0;
+  font-size: clamp(2.2rem, 8vw, 4.5rem);
+  margin-bottom: 0.5rem;
+  letter-spacing: 4px;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.2), 3px 3px 5px #000;
+}
+
+.title-underline {
+  height: 3px;
+  width: 60%;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 0 auto 2.5rem auto;
+}
+
+/* Yeni Beşgen Kalkan Butonlar */
 .medieval-btn {
-  background: rgba(139, 69, 19, 0.2);
-  border: 1px solid var(--gold);
+  background: linear-gradient(to bottom, #4a2c1d, #2b1810);
+  border: 2px solid var(--gold);
   color: var(--gold-bright);
-  font-family: 'MedievalSharp', cursive;
-  font-size: 1.8rem;
-  padding: 15px 40px;
-  margin: 10px 0;
+  font-family: var(--font-main);
+  font-size: clamp(1.1rem, 3vw, 1.6rem);
+  padding: 18px 30px;
+  margin: 15px 0;
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  min-width: 320px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  text-shadow: 2px 2px 4px #000;
+  justify-content: center;
+  gap: 20px;
   width: 100%;
-  min-width: 655px;
-
+  position: relative;
+  transition: all 0.3s ease;
+  text-shadow: 2px 2px 4px #000;
+  
+  /* Üstü düz, altı hafif sivrilen kalkan formu (Beşgen) */
+  clip-path: polygon(0% 0%, 100% 0%, 100% 80%, 50% 100%, 0% 80%);
+  box-sizing: border-box;
 }
 
 .medieval-btn:hover {
   background: var(--gold);
   color: var(--dark-wood);
-  box-shadow: 0 0 25px var(--gold);
-  transform: scale(1.05);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+  /* Hover'da formu koruyoruz ama rengi parlatıyoruz */
 }
 
 .btn-icon {
-  font-size: 1.4rem;
-  opacity: 0.8;
+  font-size: 1.5rem;
+  filter: drop-shadow(0 0 5px var(--gold));
 }
 
-/* Başlık için yeni stil */
-.game-title {
-  font-family: 'Cinzel Decorative', serif;
-  color: #f0f0f0;
-  /* Saf olmayan, asil bir beyaz */
-  font-size: 4.5rem;
-  margin-bottom: 2.5rem;
-  text-transform: uppercase;
-  letter-spacing: 8px;
-
-  /* Beyazı öne çıkaran derin gölgeler */
-  text-shadow:
-    0 0 10px rgba(255, 255, 255, 0.3),
-    2px 2px 0px #000,
-    4px 4px 15px rgba(0, 0, 0, 0.8);
-
-  /* Hafif bir parlama animasyonu (opsiyonel) */
-  animation: titleGlow 4s ease-in-out infinite alternate;
+/* Mühür */
+.wax-seal {
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 55px;
+  height: 55px;
+  background: #8b0000;
+  border-radius: 50%;
+  border: 3px solid #5e0000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-main);
+  color: #222;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
 }
 
-@keyframes titleGlow {
-  from {
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2), 2px 2px 5px #000;
+/* Responsive Düzenlemeler */
+@media (max-width: 480px) {
+  .main-card {
+    padding: 2rem 1rem;
+    border-radius: 10px 10px 60px 60px / 10px 10px 20px 20px;
   }
-
-  to {
-    text-shadow: 0 0 25px rgba(255, 255, 255, 0.5), 2px 2px 5px #000;
+  .medieval-btn {
+    padding: 15px 20px;
+    clip-path: polygon(0% 0%, 100% 0%, 100% 85%, 50% 100%, 0% 85%);
   }
 }
 
-/* Kartın üst kısmına başlığı dengeleyecek bir çizgi */
-.title-underline {
-  height: 2px;
-  width: 60%;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  margin: -1.5rem auto 2.5rem auto;
+
+/* MainMenu.css - Arka Plan Görselli Güncelleme */
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+
+:root {
+  --gold: #d4af37;
+  --gold-bright: #f9e29b;
+  --dark-wood: #2b1810;
+  --fire-glow: rgba(255, 69, 0, 0.4);
+  --font-main: 'MedievalSharp', cursive;
 }
+
+.menu-container {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+  box-sizing: border-box;
+
+  /* --- YENİ ARKA PLAN GÖRSELİ VE FİLTRELER --- */
+  background: 
+    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), /* Üzerine koyu katman */
+    url('/public/images/bg.png') no-repeat center center fixed; /* Görsel URL'si */
+  background-size: cover; /* Resmi tüm alanı kaplayacak şekilde ölçekle */
+  backdrop-filter: blur(5px); /* Hafif bulanıklık efekti */
+  
+  /* Köz animasyonunu kaldırın ya da yeni görsele uygun hale getirin */
+  /* Eğer köz efekti hala isteniyorsa, ::after ile başka bir katmana taşınabilir. */
+}
+
+/* Mevcut Köz Animasyonu (İstersen kaldırabilirsin, görselle çakışabilir) */
+/* Eğer görselle birlikte istiyorsan z-index'ini ayarlamalısın */
+.menu-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* background-image: radial-gradient(circle, var(--fire-glow) 1px, transparent 1px); */ /* Bu satırı yorum satırı yap veya kaldır */
+  background-size: 50px 50px;
+  animation: embers 15s linear infinite;
+  pointer-events: none;
+  z-index: 1; /* Görselin üzerinde görünmesini istersen z-index'i ayarla */
+}
+
+@keyframes embers {
+  from { transform: translateY(0); }
+  to { transform: translateY(-1000px); }
+}
+
+/* Diğer tüm .main-card, .game-title, .medieval-btn vb. stiller aynen kalır. */
+/* Sadece .menu-container kısmı değişti. */
