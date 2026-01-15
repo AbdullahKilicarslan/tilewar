@@ -1,10 +1,6 @@
 import React, { useMemo, useState, useRef, useEffect, Suspense } from 'react'
-import { Canvas,useLoader } from '@react-three/fiber'
-import gsap from 'gsap'
-import { useTexture } from '@react-three/drei'
-import { Sky, OrbitControls, useGLTF } from '@react-three/drei'
-import * as THREE from 'three'
-
+import { Canvas } from '@react-three/fiber'
+import { Sky, OrbitControls, Cloud, Stars } from '@react-three/drei'
 // 
 import { useGameContext } from '../../contexts/GameContext';
 
@@ -17,27 +13,12 @@ import { HudContainer } from './hud/HudContainer';
 import Hexagon from './subComponents/Hexagon';
 import Unit from './subComponents/Unit';
 
-function MapBackground() {
-  // Texture yüklenirken sRGB renk uzayını zorluyoruz
-  const texture = useLoader(THREE.TextureLoader, '/images/bg.png');
-  
-  useEffect(() => {
-    if (texture) {
-      texture.colorSpace = THREE.SRGBColorSpace; // Renklerin doğru görünmesi için
-      texture.needsUpdate = true;
-    }
-  }, [texture]);
-  
-  return (
-    <primitive attach="background" object={texture} />
-  );
-}
 
 export default function GameMap() {
 
   const { mapData, unitData } = useGameContext();
 
-  const [ unitDataLocal, setUnitDataLocal ] = useState([]);
+  const [unitDataLocal, setUnitDataLocal] = useState([]);
 
 
   useEffect(() => {
@@ -62,17 +43,37 @@ export default function GameMap() {
       {/* HUD Bileşeni */}
       <HudContainer></HudContainer>
       <Canvas shadows
-        camera={{ position: [10, 10, 40], fov: 60, far: 1000 }}
+        camera={{ position: [10, 10, 40], fov: 60, far: 2000 }}
         raycaster={{ params: { Line: { threshold: 0.15 } } }}>
 
-       <Suspense fallback={null}>
-          <MapBackground />
-        </Suspense>
 
-        
+
         <ambientLight intensity={1.5} />
         <directionalLight position={[20, 50, 20]} intensity={1} castShadow shadow-mapSize={[2048, 2048]} />
-        {/*<Sky sunPosition={[-100, 10, -100]} distance={450000} inclination={0.6} azimuth={0.1} />*/}
+
+        <Sky sunPosition={[100, 20, 100]} distance={45000} />
+        <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+
+        {/* Bulut Grubu */}
+        <group>
+          <Cloud
+            opacity={0.5}
+            speed={0.4} // Dönüş hızı
+            width={10} // Bulut kümesinin genişliği
+            depth={1.5} // Bulut kümesinin derinliği
+            segments={40} // Bulut sayısı
+            position={[-10, 15, -10]}
+          />
+          <Cloud
+            opacity={0.8}
+            speed={0.4}
+            width={20}
+            depth={2}
+            segments={40}
+            position={[10, 20, 15]}
+            color="#f0f0f0"
+          />
+        </group>
 
         {mapData && mapData.map((cell) => (
           <Hexagon key={cell.id} hexKey={cell.id} {...cell} />

@@ -5,6 +5,10 @@ import * as THREE from 'three'
 /* Model Imports */
 import { CoinPouch } from '../../model/coinpouch';
 import { Castle } from './../../model/castle';
+import { Fish } from './../../model/fish';
+import { Tree1 } from './../../model/tree1';
+import { Cave } from '../../model/cave';
+
 import { useGameContext } from '../../../contexts/GameContext';
 
 
@@ -19,19 +23,23 @@ const Hexagon = ({ hexKey, position, color, height, emissiveIntensity, type }) =
     const [hovered, setHovered] = React.useState(false);
 
     const baseColor = color === 'gold' ? '#d4af37' : color;
-    const isSpecial = type === 'gold' || type === 'stronghold';
+    const isSpecial = type === 'gold' || type === 'stronghold'; 
 
-    console.log(strongholdPositions);
-        const stronghold = strongholdPositions?.find(x => hexKey === `hex-${x.r}-${x.c}`);
-        const strongcolor = stronghold?.color || 'white';
+    const stronghold = strongholdPositions?.find(x => hexKey === `hex-${x.r}-${x.c}`);
+    const strongcolor = stronghold?.color || 'white';
+    if (type === 'mana')
+        console.log("balık")
     return (
         <group position={position}>
             {/* Altın kesesi varsa, etkileşimi engellememesi için mesh dışında tutuyoruz */}
             {type === 'gold' && (
-                <CoinPouch position={[0, height / 2 + 0.5, 0]} scale={0.2} speed={2} />
+                <Cave position={[-1, height-0.45 ,0.5]} scale={0.04} speed={2} />
             )}
 
-            {stronghold && <Castle position={[0, height / 2, 0]} scale={0.7} speed={2} customColor={strongcolor}/>}
+            {stronghold && <Castle position={[0, height / 2, 0]} scale={0.7} speed={2} customColor={strongcolor} />}
+            {type === 'mana' && <Fish position={[0, height / 2, 0]} scale={0.1} />}
+            {type === 'grass' && <Tree1 position={[0.5, height / 2, 0]} scale={0.1} customColor={color} />}
+            {type === 'grass' && <Tree1 position={[0.5, height / 2, 0.5]} scale={0.1} customColor={color} />}
 
             <mesh rotation={[Math.PI, 0, 0]} castShadow receiveShadow
                 onPointerEnter={(e) => {

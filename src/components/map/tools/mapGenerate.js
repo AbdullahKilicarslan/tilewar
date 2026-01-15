@@ -1,5 +1,5 @@
 import React from 'react'
-import  generalTools  from '../../../tools/generalTools';
+import generalTools from '../../../tools/generalTools';
 
 
 const Map1 = () => {
@@ -27,7 +27,16 @@ const Map1 = () => {
             // Çimen: Koyu orman yeşili/zeytin tonları
             // Dağ: Koyu taş grisi/kahve
             // Kenarlar/Kaleler: Altın/Bronz vurgular
-            let cc = height > 1 ? '#7f550d' : '#274619';
+            let m = height > 1;
+            let cc = m ? '#7f550d' : '#274619';
+            if (m)
+                type = "m";
+            else {
+                if (Math.random() > 0.7)
+
+                    type = "grass";
+            }
+
             cc = generalTools.getVariantColor(cc, 15);
             // Köşe ve Stratejik Noktalar (Kırmızıyı "Kraliyet Kırmızısı"na çekiyoruz)
             if ((c === 0 && r === 0) || (c === rowWidth - 1 && r === 12) ||
@@ -199,7 +208,7 @@ const Map3 = () => {
 };
 const generateByName = (mapName) => {
     // mapName string olarak gelir: "Map1", "Map2" veya "Map3"
-    
+
     if (mapGenerate[mapName]) {
         const result = mapGenerate[mapName]();
         console.log(`${mapName} başarıyla oluşturuldu:`, result);
@@ -210,7 +219,7 @@ const generateByName = (mapName) => {
     }
 };
 const mapGenerate = {
-   Map1,Map2,Map3,
+    Map1, Map2, Map3,
     generateByName
 };
 

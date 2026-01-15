@@ -127,7 +127,8 @@ export const GameProvider = ({ children }) => {
 
 
     unitData,
-    setUnitData
+    setUnitData,
+    setMapData
   };
 
 

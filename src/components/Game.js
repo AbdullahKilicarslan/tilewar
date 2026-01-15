@@ -10,17 +10,20 @@ import ClientScreen from './screens/ClientScreen'; // HexMap.js dosyasının ayn
 import { useAppContext } from '../contexts/AppContext';
 import { useGameContext } from '../contexts/GameContext';
 import { useScreenContext } from '../contexts/ScreenContext';
+import mapGenerate from './map/tools/mapGenerate';
 
 
 export default function Game() {
   const { gameScreen } = useAppContext();
   const { isMainMenuScreen, isHostScreen, isLobyScreen, isMapScreen, isClientScreen } = useScreenContext();
-  const { StartGame } = useGameContext();
+  const { StartGame, setMapData} = useGameContext();
   const isDev = true; // Geliştirme modu için true yapabilirsiniz
 
 
   useEffect(() => {
     if (!isDev) return;
+          setMapData(mapGenerate.Map1().map);
+
     StartGame([{
       id: 'host',
       name: 'Veriziazam İsmail',
