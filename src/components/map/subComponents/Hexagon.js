@@ -8,6 +8,7 @@ import { Castle } from './../../model/castle';
 import { Fish } from './../../model/fish';
 import { Tree1 } from './../../model/tree1';
 import { Cave } from '../../model/cave';
+import { MineGate } from '../../model/mineGate';
 
 import { useGameContext } from '../../../contexts/GameContext';
 
@@ -33,7 +34,7 @@ const Hexagon = ({ hexKey, position, color, height, emissiveIntensity, type }) =
         <group position={position}>
             {/* Altın kesesi varsa, etkileşimi engellememesi için mesh dışında tutuyoruz */}
             {type === 'gold' && (
-                <Cave position={[-1, height-0.45 ,0.5]} scale={0.04} speed={2} />
+                <MineGate position={[-0, height-0.45 ,-.5]} scale={0.5} speed={2} />
             )}
 
             {stronghold && <Castle position={[0, height / 2, 0]} scale={0.7} speed={2} customColor={strongcolor} />}
